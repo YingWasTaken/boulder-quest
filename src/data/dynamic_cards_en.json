@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1001,
+    "title": "STRENGTH CHALLENGE",
+    "description": "Climb a {nivel_usuario} grade boulder using only {numero} fingers on your main hand.",
+    "level": 3,
+    "points": 4,
+    "statType": "strength",
+    "tries": 2,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1002,
+    "title": "COLOR CHALLENGE",
+    "description": "Climb an easy boulder using only {color_presa} holds.",
+    "level": 1,
+    "points": 2,
+    "statType": "technique",
+    "tries": 1,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1003,
+    "title": "BALANCE CHALLENGE",
+    "description": "Climb a {nivel_usuario} grade boulder without using your {parte_cuerpo}.",
+    "level": 2,
+    "points": 3,
+    "statType": "balance",
+    "tries": 2,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1004,
+    "title": "SPEED CHALLENGE",
+    "description": "Complete a boulder of {color_presa} holds in under {segundos} seconds.",
+    "level": 2,
+    "points": 3,
+    "statType": "speed",
+    "tries": 2,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1005,
+    "title": "COORDINATED CHALLENGE",
+    "description": "On your next {nivel_usuario} grade boulder, touch each new hold for {segundos} seconds before advancing.",
+    "level": 2,
+    "points": 3,
+    "statType": "coordination",
+    "tries": 1,
+    "imageSrc": null,
+    "mode": "All"
+  }
+]

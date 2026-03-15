@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1001,
+    "title": "筋力チャレンジ",
+    "description": "利き手では{numero}本の指だけを使って、グレード{nivel_usuario}のボルダーを登ります。",
+    "level": 3,
+    "points": 4,
+    "statType": "strength",
+    "tries": 2,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1002,
+    "title": "色チャレンジ",
+    "description": "{color_presa}のホールドだけを使って簡単なボルダーを登ります。",
+    "level": 1,
+    "points": 2,
+    "statType": "technique",
+    "tries": 1,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1003,
+    "title": "バランスチャレンジ",
+    "description": "{parte_cuerpo}を使わずに、グレード{nivel_usuario}のボルダーを登ります。",
+    "level": 2,
+    "points": 3,
+    "statType": "balance",
+    "tries": 2,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1004,
+    "title": "スピードチャレンジ",
+    "description": "{color_presa}のホールドのボルダーを{segundos}秒以内に完了します。",
+    "level": 2,
+    "points": 3,
+    "statType": "speed",
+    "tries": 2,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1005,
+    "title": "調整力チャレンジ",
+    "description": "次のグレード{nivel_usuario}のボルダーで、進む前に新しいホールドを毎回{segundos}秒間触ります。",
+    "level": 2,
+    "points": 3,
+    "statType": "coordination",
+    "tries": 1,
+    "imageSrc": null,
+    "mode": "All"
+  }
+]

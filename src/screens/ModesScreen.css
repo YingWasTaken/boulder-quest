@@ -1,0 +1,234 @@
+.modes-screen {
+  min-height: 100vh;
+  padding: 1rem 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.modes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.modes-back {
+  background: var(--bg-card);
+  border: var(--border-width) solid var(--border-color);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 3px 3px 0px #000;
+  transition: all 0.1s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.modes-back:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #000;
+}
+
+@media (hover: hover) {
+  .modes-back:hover {
+    color: var(--secondary-hover);
+    background: rgba(0,0,0,0.02);
+    border-color: rgba(0,0,0,0.15);
+    transform: translateX(-2px);
+  }
+}
+
+.modes-lang-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: var(--border-width) solid var(--border-color);
+  background: var(--white);
+  border-radius: 0.5rem;
+  font-size: 1.25rem;
+  cursor: pointer;
+  box-shadow: 3px 3px 0px #000;
+  transition: all 0.1s;
+}
+
+.modes-lang-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #000;
+}
+
+.modes-tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin: 1rem 0;
+  background: rgba(0,0,0,0.05);
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+}
+
+.modes-tab {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: transparent;
+  border: none;
+  border-radius: 0.35rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.modes-tab.active {
+  background: var(--primary);
+  color: var(--white);
+  border: var(--border-width) solid var(--border-color);
+}
+
+.modes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.modes-mode-btn {
+  padding: 1.25rem;
+  font-size: 1rem;
+  font-weight: 800;
+  text-align: left;
+  background: var(--bg-card);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 0.75rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.1s;
+  box-shadow: var(--btn-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modes-mode-btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: var(--btn-shadow-active);
+}
+
+.modes-mode-btn.active {
+  background: var(--accent);
+}
+
+@media (hover: hover) {
+  .modes-mode-btn:hover {
+    border-color: var(--primary);
+    background: rgba(255, 94, 94, 0.06);
+  }
+}
+
+.modes-mode-icon {
+  font-size: 1.2rem;
+  color: var(--primary);
+  opacity: 0.6;
+}
+
+@media (hover: hover) {
+  .modes-mode-btn:hover .modes-mode-icon {
+    opacity: 1;
+  }
+}
+
+.modes-personalize {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.modes-section {
+  background: var(--bg-card);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  box-shadow: var(--card-shadow);
+}
+
+.modes-section-title {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.modes-rounds-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modes-rounds-row input {
+  width: 4rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 0.5rem;
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: 2px 2px 0px #000;
+}
+
+.modes-rounds-row span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.modes-difficulty-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.modes-diff-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  background: var(--bg);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 0.5rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.1s;
+  box-shadow: 2px 2px 0px #000;
+}
+
+.modes-diff-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px #000;
+}
+
+.modes-diff-btn.active {
+  border-color: var(--primary);
+  background: rgba(255, 94, 94, 0.12);
+  color: var(--primary);
+}
+
+.modes-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.modes-cat-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.modes-cat-label input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--primary);
+}

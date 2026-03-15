@@ -1,0 +1,112 @@
+.how-to-play-slides {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.how-to-play-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  position: relative;
+  min-height: 3rem;
+}
+
+.how-to-play-dots {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.how-to-play-dots .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.2);
+  transition: background 0.2s;
+}
+
+.how-to-play-dots .dot.active {
+  background: var(--primary);
+  transform: scale(1.2);
+}
+
+.how-to-play-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  border-radius: 0.5rem;
+}
+
+@media (hover: hover) {
+  .how-to-play-close:hover {
+    color: var(--text);
+  }
+}
+
+.how-to-play-track {
+  flex: 1;
+  display: flex;
+  transition: transform 0.3s ease;
+  min-height: 0;
+}
+
+.how-to-play-slide {
+  flex: 0 0 100%;
+  padding: 1.5rem 2rem;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.how-to-play-slide-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.how-to-play-slide-body {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.how-to-play-footer {
+  padding: 1.5rem 2rem;
+}
+
+.how-to-play-next,
+.how-to-play-done {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--white);
+  background: var(--primary);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  box-shadow: var(--btn-shadow);
+  transition: all 0.1s;
+  text-transform: uppercase;
+}
+
+.how-to-play-next:active,
+.how-to-play-done:active {
+  transform: translate(3px, 3px);
+  box-shadow: var(--btn-shadow-active);
+}

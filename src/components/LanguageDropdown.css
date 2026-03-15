@@ -1,0 +1,80 @@
+.language-dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.language-dropdown-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: var(--border-width) solid var(--border-color);
+  background: var(--white);
+  border-radius: 0.5rem;
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  box-shadow: 3px 3px 0px #000;
+  transition: all 0.1s;
+}
+
+.language-dropdown-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #000;
+}
+
+@media (hover: hover) {
+  .language-dropdown-btn:hover {
+    background: var(--bg);
+  }
+}
+
+.language-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.5rem;
+  background: var(--bg-card);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  box-shadow: var(--card-shadow);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 140px;
+}
+
+.language-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--text);
+  transition: background 0.2s;
+}
+
+@media (hover: hover) {
+  .language-dropdown-item:hover {
+    background: rgba(0,0,0,0.05);
+  }
+}
+
+.language-dropdown-item.active {
+  background: rgba(255, 94, 94, 0.1); /* Assumes primary red tint, fallback */
+  color: var(--primary);
+  font-weight: bold;
+}
+
+.language-dropdown-flag {
+  font-size: 1.1rem;
+}

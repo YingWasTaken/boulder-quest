@@ -1,0 +1,35 @@
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  background-color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.splash-logo {
+  width: 151px;
+  /* Adjust based on logo size */
+  height: auto;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+}
+
+.splash-title {
+  color: var(--white);
+  font-size: 2rem;
+  font-weight: 900;
+  margin: 0;
+  margin-top: -1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 3px 3px 0px #000000;
+  -webkit-text-stroke: 1px #000000;
+}

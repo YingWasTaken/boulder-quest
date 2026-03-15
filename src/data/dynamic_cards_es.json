@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1001,
+    "title": "RETO DE FUERZA",
+    "description": "Haz un bloque de grado {nivel_usuario} usando solo {numero} dedos en la mano principal.",
+    "level": 3,
+    "points": 4,
+    "statType": "strength",
+    "tries": 2,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1002,
+    "title": "RETO DE COLOR",
+    "description": "Escala un bloque fácil usando solo presas {color_presa}.",
+    "level": 1,
+    "points": 2,
+    "statType": "technique",
+    "tries": 1,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1003,
+    "title": "RETO DE EQUILIBRIO",
+    "description": "Escala un bloque de grado {nivel_usuario} sin utilizar el {parte_cuerpo}.",
+    "level": 2,
+    "points": 3,
+    "statType": "balance",
+    "tries": 2,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1004,
+    "title": "RETO DE VELOCIDAD",
+    "description": "Completa un bloque de presas {color_presa} en menos de {segundos} segundos.",
+    "level": 2,
+    "points": 3,
+    "statType": "speed",
+    "tries": 2,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1005,
+    "title": "RETO COORDINADO",
+    "description": "En tu próximo bloque de grado {nivel_usuario}, toca cada presa nueva durante {segundos} segundos antes de avanzar.",
+    "level": 2,
+    "points": 3,
+    "statType": "coordination",
+    "tries": 1,
+    "imageSrc": null,
+    "mode": "All"
+  }
+]

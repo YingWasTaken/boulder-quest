@@ -1,0 +1,195 @@
+.game-screen {
+  min-height: 100vh;
+  background: var(--white);
+  transition: background 0.5s ease;
+  padding: 0 0 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #eeee;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.game-glow {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: min(120px, 28vw);
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 0.15s ease;
+}
+
+.game-glow-left {
+  left: 0;
+  background: radial-gradient(ellipse 100% 50% at 0% 50%, rgba(255, 0, 0, 0.884), transparent 70%);
+  box-shadow: inset 40px 0 60px -20px rgba(255, 0, 0, 0.25);
+}
+
+.game-glow-right {
+  right: 0;
+  background: radial-gradient(ellipse 100% 50% at 100% 50%, rgba(68, 247, 14, 0.658), transparent 70%);
+  box-shadow: inset -40px 0 60px -20px rgba(34, 197, 94, 0.3);
+}
+
+.game-header {
+  position: relative;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.game-turn-banner {
+  position: relative;
+  width: 100%;
+  height: 4rem;
+}
+
+.game-turn-semicircle {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12rem;
+  height: 6rem;
+  border-radius: 0 0 12rem 12rem;
+  background: var(--player-color, var(--primary));
+  border: var(--border-width) solid var(--border-color);
+  border-top: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.game-turn-name {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--white);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.game-end-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 0.5rem;
+  background: var(--white);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: 3px 3px 0px #000;
+  transition: all 0.1s;
+  z-index: 10;
+}
+
+.game-end-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #000;
+}
+
+@media (hover: hover) {
+  .game-end-btn:hover {
+    background: var(--primary-hover);
+    color: var(--white);
+  }
+}
+
+.game-card-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.game-end-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.game-end-modal {
+  background: var(--bg-card);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  max-width: 320px;
+  width: 100%;
+  box-shadow: var(--card-shadow);
+}
+
+.game-end-modal-title {
+  margin: 0 0 1.25rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+}
+
+.game-end-modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.game-end-modal-btn {
+  padding: 0.65rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 800;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.1s;
+  box-shadow: 3px 3px 0px #000;
+}
+
+.game-end-modal-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #000;
+}
+
+.game-end-modal-btn.secondary {
+  background: var(--bg);
+  color: var(--text-muted);
+}
+
+@media (hover: hover) {
+  .game-end-modal-btn.secondary:hover {
+    background: #e5e7eb;
+    color: var(--text);
+  }
+}
+
+.game-end-modal-btn.primary {
+  background: var(--primary);
+  color: var(--white);
+}
+
+@media (hover: hover) {
+  .game-end-modal-btn.primary:hover {
+    background: var(--primary-hover);
+  }
+}

@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1001,
+    "title": "DESAFIO DE FORÇA",
+    "description": "Escala um bloco de grau {nivel_usuario} usando apenas {numero} dedos na tua mão principal.",
+    "level": 3,
+    "points": 4,
+    "statType": "strength",
+    "tries": 2,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1002,
+    "title": "DESAFIO DE COR",
+    "description": "Escala um bloco fácil usando apenas presas {color_presa}.",
+    "level": 1,
+    "points": 2,
+    "statType": "technique",
+    "tries": 1,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1003,
+    "title": "DESAFIO DE EQUILÍBRIO",
+    "description": "Escala um bloco de grau {nivel_usuario} sem usar a(o) teu(tua) {parte_cuerpo}.",
+    "level": 2,
+    "points": 3,
+    "statType": "balance",
+    "tries": 2,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1004,
+    "title": "DESAFIO DE VELOCIDADE",
+    "description": "Completa um bloco de presas {color_presa} em menos de {segundos} segundos.",
+    "level": 2,
+    "points": 3,
+    "statType": "speed",
+    "tries": 2,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1005,
+    "title": "DESAFIO COORDENADO",
+    "description": "No teu próximo bloco de grau {nivel_usuario}, toca em cada presa nova durante {segundos} segundos antes de avançar.",
+    "level": 2,
+    "points": 3,
+    "statType": "coordination",
+    "tries": 1,
+    "imageSrc": null,
+    "mode": "All"
+  }
+]

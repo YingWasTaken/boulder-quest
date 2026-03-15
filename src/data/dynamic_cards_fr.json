@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1001,
+    "title": "DÉFI DE FORCE",
+    "description": "Grimpe un bloc de niveau {nivel_usuario} en utilisant seulement {numero} doigts de ta main principale.",
+    "level": 3,
+    "points": 4,
+    "statType": "strength",
+    "tries": 2,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1002,
+    "title": "DÉFI DE COULEUR",
+    "description": "Grimpe un bloc facile en utilisant uniquement des prises {color_presa}.",
+    "level": 1,
+    "points": 2,
+    "statType": "technique",
+    "tries": 1,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1003,
+    "title": "DÉFI D'ÉQUILIBRE",
+    "description": "Grimpe un bloc de niveau {nivel_usuario} sans utiliser ton/ta {parte_cuerpo}.",
+    "level": 2,
+    "points": 3,
+    "statType": "balance",
+    "tries": 2,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1004,
+    "title": "DÉFI DE VITESSE",
+    "description": "Termine un bloc de prises {color_presa} en moins de {segundos} secondes.",
+    "level": 2,
+    "points": 3,
+    "statType": "speed",
+    "tries": 2,
+    "imageSrc": null,
+    "mode": "All"
+  },
+  {
+    "id": 1005,
+    "title": "DÉFI DE COORDINATION",
+    "description": "Sur ton prochain bloc de niveau {nivel_usuario}, touche chaque nouvelle prise pendant {segundos} secondes avant d'avancer.",
+    "level": 2,
+    "points": 3,
+    "statType": "coordination",
+    "tries": 1,
+    "imageSrc": null,
+    "mode": "All"
+  }
+]
