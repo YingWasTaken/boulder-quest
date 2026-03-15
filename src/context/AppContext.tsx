@@ -73,6 +73,7 @@ type AppContextValue = AppState & {
   getUsedColors: () => (typeof PLAYER_COLORS)[number][]
   playClick: () => void
   rerollTwisterColor: (cardId: number) => void
+  rerollCard: () => void
 }
 
 const AppContext = createContext<AppContextValue | null>(null)
@@ -452,6 +453,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
     })
   }, [playClickSound])
+  
+  const rerollCard = useCallback(() => {
+    playClickSound()
+    setState(s => {
+      // Deduct 1 point from current player
+      const newScores = s.scores.map((sc, i) => 
+        i === s.currentTurnIndex 
+          ? { ...sc, points: Math.max(0, sc.points - 1) } 
+          : sc
+      )
+
+      // Move to next card in deck
+      let nextDeck = s.deck.slice(1)
+      if (!nextDeck.length) {
+        nextDeck = shuffle(buildDeck(s.settings, s.lang))
+        if (!nextDeck.length) nextDeck = getCardsPool(s.lang)
+      }
+
+      return {
+        ...s,
+        scores: newScores,
+        deck: nextDeck
+      }
+    })
+  }, [playClickSound, buildDeck])
 
   const value = useMemo<AppContextValue>(
     () => ({
@@ -471,6 +497,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       getUsedColors,
       playClick,
       rerollTwisterColor,
+      rerollCard,
     }),
     [
       state,
@@ -489,6 +516,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       getUsedColors,
       playClick,
       rerollTwisterColor,
+      rerollCard,
     ]
   )
 

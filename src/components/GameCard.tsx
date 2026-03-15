@@ -16,7 +16,7 @@ interface GameCardProps {
 
 export function GameCard({ card, onComplete, onFail, onDragChange }: GameCardProps) {
   const { t } = useTranslation()
-  const { settings, rerollTwisterColor } = useApp()
+  const { settings, rerollTwisterColor, rerollCard } = useApp()
   const x = useMotionValue(0)
   const rotate = useTransform(x, [-200, 200], [-10, 10])
 
@@ -91,6 +91,7 @@ export function GameCard({ card, onComplete, onFail, onDragChange }: GameCardPro
   const iconName = STAT_ICONS[category] ?? 'circle'
 
   const isTwister = settings.mode === 'twister'
+  const isDuelo = settings.mode === 'duelo'
   const twisterColorKey = isTwister ? card.description : null
   
   // Mapping of Twister color keys to hex/css colors for visual display
@@ -187,12 +188,16 @@ export function GameCard({ card, onComplete, onFail, onDragChange }: GameCardPro
         >
           <i className="fa-solid fa-xmark" aria-hidden />
         </button>
-        {isTwister && (
+        {(isTwister || !isDuelo) && (
           <button
             type="button"
             className="game-card-btn game-card-btn-reroll"
             onClick={() => {
-              rerollTwisterColor(card.id)
+              if (isTwister) {
+                rerollTwisterColor(card.id)
+              } else {
+                rerollCard()
+              }
               setShowPenalty(true)
               setTimeout(() => setShowPenalty(false), 800)
             }}
