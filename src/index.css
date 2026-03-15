@@ -25,7 +25,6 @@
 html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
-  overflow: hidden;
   height: 100%;
 }
 
@@ -34,17 +33,17 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   background: var(--bg);
   color: var(--text);
-  height: 100vh;
+  min-height: 100vh;
+  min-height: 100dvh;
   width: 100vw;
-  overflow: hidden;
   line-height: 1.5;
-  position: fixed; /* Prevents bounce scroll on some mobile browsers */
+  /* position: fixed; removed to allow scrolling if needed */
 }
 
 #root {
-  height: 100vh;
+  min-height: 100vh;
+  min-height: 100dvh;
   width: 100vw;
-  overflow: hidden;
 }
 
 button {
