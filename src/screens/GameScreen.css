@@ -106,9 +106,98 @@
 
 @media (hover: hover) {
   .game-end-btn:hover {
-    background: var(--primary-hover);
+    background: var(--error);
     color: var(--white);
   }
+}
+
+.game-ranking-btn {
+  position: absolute;
+  top: 0.75rem;
+  left: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 0.5rem;
+  background: var(--white);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: 3px 3px 0px #000;
+  transition: all 0.1s;
+  z-index: 10;
+}
+
+.game-ranking-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #000;
+}
+
+@media (hover: hover) {
+  .game-ranking-btn:hover {
+    background: var(--accent);
+    color: var(--white);
+  }
+}
+
+.game-ranking-modal {
+  background: var(--bg-card);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  max-width: 320px;
+  width: 100%;
+  box-shadow: var(--card-shadow);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: var(--white);
+  border: 2px solid var(--border-color);
+  border-radius: 0.5rem;
+  box-shadow: 3px 3px 0px #000;
+}
+
+.ranking-item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ranking-badge {
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--player-color);
+  border: 1px solid #000;
+  border-radius: 50%;
+}
+
+.ranking-player-name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.ranking-player-points {
+  font-weight: 900;
+  color: var(--primary);
 }
 
 .game-card-area {

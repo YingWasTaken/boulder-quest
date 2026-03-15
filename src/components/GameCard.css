@@ -193,7 +193,30 @@
 
 .game-card-btn-reroll {
   background: var(--accent);
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 4rem;
+  height: 4rem;
   font-size: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.reroll-penalty-label {
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1;
+}
+
+.floating-penalty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4rem;
+  font-weight: 900;
+  color: #ef4444;
+  text-shadow: 2px 2px 0px #000;
+  pointer-events: none;
+  z-index: 100;
 }

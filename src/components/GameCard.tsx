@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useTransform } from 'framer-motion'
+import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion'
 import type { Card as CardType, CardCategory } from '../types'
 import { useApp } from '../context/AppContext'
 import { useTranslation } from '../hooks/useTranslation'
@@ -21,6 +21,7 @@ export function GameCard({ card, onComplete, onFail, onDragChange }: GameCardPro
   const rotate = useTransform(x, [-200, 200], [-10, 10])
 
   const [timeLeft, setTimeLeft] = useState(settings.timerSeconds)
+  const [showPenalty, setShowPenalty] = useState(false)
 
   const handleVibrate = useCallback((type: 'success' | 'fail') => {
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -105,6 +106,19 @@ export function GameCard({ card, onComplete, onFail, onDragChange }: GameCardPro
 
   return (
     <div className="game-card-wrapper">
+      <AnimatePresence>
+        {showPenalty && (
+          <motion.div
+            className="floating-penalty"
+            initial={{ opacity: 0, scale: 0.5, y: 0 }}
+            animate={{ opacity: 1, scale: 1.5, y: -100 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            -1
+          </motion.div>
+        )}
+      </AnimatePresence>
       {settings.timedMode && (
         <div className="game-card-timer-container">
           <motion.div 
@@ -177,11 +191,16 @@ export function GameCard({ card, onComplete, onFail, onDragChange }: GameCardPro
           <button
             type="button"
             className="game-card-btn game-card-btn-reroll"
-            onClick={() => rerollTwisterColor(card.id)}
+            onClick={() => {
+              rerollTwisterColor(card.id)
+              setShowPenalty(true)
+              setTimeout(() => setShowPenalty(false), 800)
+            }}
             aria-label={t('reroll')}
             title={t('reroll')}
           >
             <i className="fa-solid fa-rotate-right" aria-hidden />
+            <span className="reroll-penalty-label">-1</span>
           </button>
         )}
         <button

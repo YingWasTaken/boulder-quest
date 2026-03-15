@@ -437,9 +437,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const newDeck = [newCard, ...s.deck.slice(1)]
       // Update used colors: remove old one, add new one
       const filteredUsed = s.usedTwisterColors.filter(c => c !== currentDesc)
+      
+      const newScores = s.scores.map((sc, i) => 
+        i === s.currentTurnIndex 
+          ? { ...sc, points: Math.max(0, sc.points - 1) } 
+          : sc
+      )
+
       return {
         ...s,
         deck: newDeck,
+        scores: newScores,
         usedTwisterColors: [...filteredUsed, nextColor]
       }
     })

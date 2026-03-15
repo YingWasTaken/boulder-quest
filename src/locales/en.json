@@ -66,6 +66,7 @@
   "modeAllToOneDesc": "Everyone attempts the same challenge each round.",
   "modeDueloDesc": "Everyone at once. If it's done, everyone gets points.",
   "modeTwisterDesc": "Climb by colors! Each player gets a different color each round. You cannot repeat what someone else already climbed.",
+  "liveRankingTitle": "Current Ranking",
   "modeSpeedrunDesc": "Quick! You have limited time to complete each challenge. If the timer reaches zero, you fail automatically.",
   "allPlayers": "EVERYONE",
   "reroll": "Reroll color",

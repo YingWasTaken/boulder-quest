@@ -20,6 +20,7 @@ export function GameScreen() {
   const { triggerConfetti } = useVictory()
   const [glowDragX, setGlowDragX] = useState(0)
   const [showEndModal, setShowEndModal] = useState(false)
+  const [showRanking, setShowRanking] = useState(false)
   const [overlayPlayer, setOverlayPlayer] = useState<typeof currentPlayer | null>(null)
 
   const currentPlayer = turnOrder[currentTurnIndex]
@@ -100,6 +101,15 @@ export function GameScreen() {
             {settings.mode !== 'duelo' && streak >= 3 && <span title={`Racha de ${streak}`}> 🔥</span>}
           </span>
         </div>
+        <button
+          type="button"
+          className="game-ranking-btn"
+          onClick={() => setShowRanking(true)}
+          aria-label={t('liveRankingTitle')}
+          title={t('liveRankingTitle')}
+        >
+          <i className="fa-solid fa-trophy" aria-hidden />
+        </button>
         {isInfinite && (
           <button
             type="button"
@@ -121,6 +131,36 @@ export function GameScreen() {
           onDragChange={handleDragChange}
         />
       </div>
+
+      {showRanking && (
+        <div className="game-end-modal-overlay" onClick={() => setShowRanking(false)} role="dialog" aria-modal="true">
+          <div className="game-ranking-modal" onClick={(e) => e.stopPropagation()}>
+            <p className="game-end-modal-title">{t('liveRankingTitle')}</p>
+            <div className="ranking-list">
+              {[...scores]
+                .sort((a, b) => b.points - a.points)
+                .map((s, idx) => (
+                  <div key={s.player.id} className="ranking-item">
+                    <div className="ranking-item-left">
+                      <span className="ranking-pos">#{idx + 1}</span>
+                      <div 
+                        className="ranking-badge" 
+                        style={{ ['--player-color' as string]: s.player.color }} 
+                      />
+                      <span className="ranking-player-name">{s.player.nickname}</span>
+                    </div>
+                    <span className="ranking-player-points">{s.points} pts</span>
+                  </div>
+                ))}
+            </div>
+            <div className="game-end-modal-actions" style={{ marginTop: '1.5rem' }}>
+              <button type="button" className="game-end-modal-btn primary" onClick={() => setShowRanking(false)}>
+                {t('confirm')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showEndModal && (
         <div className="game-end-modal-overlay" onClick={() => setShowEndModal(false)} role="dialog" aria-modal="true">
@@ -173,6 +213,27 @@ export function GameScreen() {
             >
               {settings.mode === 'duelo' ? t('allPlayers') : overlayPlayer.nickname}
             </motion.h1>
+            {settings.mode !== 'duelo' && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ delay: 0.2 }}
+                style={{
+                  position: 'absolute',
+                  bottom: '30%',
+                  color: 'white',
+                  fontSize: '2rem',
+                  fontWeight: '700',
+                  backgroundColor: 'rgba(0,0,0,0.2)',
+                  padding: '0.5rem 1.5rem',
+                  borderRadius: '2rem',
+                  border: '2px solid rgba(255,255,255,0.3)'
+                }}
+              >
+                {scores.find(s => s.player.id === overlayPlayer.id)?.points || 0} {t('points')}
+              </motion.div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
