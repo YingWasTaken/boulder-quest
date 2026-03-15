@@ -26,67 +26,6 @@
   gap: 0.75rem;
 }
 
-.scoreboard-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
-  background: var(--bg-card);
-  border: var(--border-width) solid var(--border-color);
-  border-radius: 0.75rem;
-  box-shadow: var(--card-shadow);
-}
-
-.scoreboard-rank {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--text-muted);
-  min-width: 1.5rem;
-}
-
-.scoreboard-avatar {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.scoreboard-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  min-width: 0;
-}
-
-.scoreboard-name {
-  font-weight: 700;
-  color: var(--text);
-  font-size: 1rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.scoreboard-meta {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-.scoreboard-points {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--primary);
-}
-
-.scoreboard-actions {
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  width: 100%;
-}
-
 .scoreboard-btn {
   padding: 1rem 1.5rem;
   font-size: 1.1rem;
@@ -130,4 +69,68 @@
   .scoreboard-btn-secondary:hover {
     background: var(--bg);
   }
+}
+
+.scoreboard-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-card);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 0.75rem;
+  box-shadow: var(--card-shadow);
+  width: 100%;
+}
+
+.scoreboard-rank {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  min-width: 1.5rem;
+}
+
+.scoreboard-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 2px solid var(--border-color);
+}
+
+.scoreboard-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.scoreboard-name {
+  font-weight: 700;
+  color: var(--text);
+  font-size: 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scoreboard-meta {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.scoreboard-points {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.scoreboard-actions {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 400px;
 }

@@ -38,6 +38,8 @@ const defaultSettings: GameSettings = {
     'strength', 'speed', 'resistance', 'group', 'team',
     'balance', 'technique', 'coordination', 'specialChallenges', 'flexibility',
   ],
+  timedMode: false,
+  timerSeconds: 30,
 }
 
 const initialState: AppState = {
@@ -154,6 +156,11 @@ const TWISTER_COLORS: TwisterColor[] = [
   'lightBlue', 'gray', 'brown'
 ]
 
+const EMPTY_STATS: Record<CardCategory, number> = {
+  strength: 0, speed: 0, resistance: 0, balance: 0, 
+  technique: 0, coordination: 0, flexibility: 0, specialChallenges: 0, group: 0, team: 0
+}
+
 function getTwisterCard(id: number, color: TwisterColor): Card {
   return {
     id,
@@ -253,6 +260,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         completed: 0,
         failed: 0,
         streak: 0,
+        categoryStats: { ...EMPTY_STATS },
       }))
       return {
         ...s,
@@ -276,31 +284,38 @@ export function AppProvider({ children }: { children: ReactNode }) {
       if (!currentPlayer && s.settings.mode !== 'duelo') return s
       
       const penalty = completed ? 0 : Math.min(cardPoints, 2)
-      const addPoints = completed ? cardPoints : -penalty
+      const points = completed ? cardPoints : -penalty
+      const currentCard = s.deck[0]
 
       let newScores = s.scores
       if (s.settings.mode === 'duelo') {
         // En modo duelo, todos ganan o pierden puntos
         newScores = s.scores.map((sc) => ({
           ...sc,
-          points: Math.max(0, sc.points + addPoints),
+          points: Math.max(0, sc.points + points),
           completed: sc.completed + (completed ? 1 : 0),
           failed: sc.failed + (completed ? 0 : 1),
           // Las rachas en duelo son globales pero se aplican a cada uno
           streak: completed ? sc.streak + 1 : 0,
+          categoryStats: completed && currentCard?.statType
+            ? { ...sc.categoryStats, [currentCard.statType]: sc.categoryStats[currentCard.statType] + 1 }
+            : sc.categoryStats
         }))
       } else {
-        newScores = s.scores.map((sc) =>
-          sc.player.id === currentPlayer.id
-            ? {
-                ...sc,
-                points: Math.max(0, sc.points + addPoints),
-                completed: sc.completed + (completed ? 1 : 0),
-                failed: sc.failed + (completed ? 0 : 1),
-                streak: completed ? sc.streak + 1 : 0,
-              }
-            : sc
-        )
+        newScores = s.scores.map((p, i) =>
+              i === s.currentTurnIndex
+                ? {
+                    ...p,
+                    points: Math.max(0, p.points + points),
+                    completed: points > 0 ? p.completed + 1 : p.completed,
+                    failed: points < 0 ? p.failed + 1 : p.failed,
+                    streak: points > 0 ? p.streak + 1 : 0,
+                    categoryStats: points > 0 && currentCard?.statType
+                      ? { ...p.categoryStats, [currentCard.statType]: p.categoryStats[currentCard.statType] + 1 }
+                      : p.categoryStats
+                  }
+                : p
+            )
       }
 
       // Fix Duelo vs Twister logic:
@@ -380,6 +395,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         completed: 0,
         failed: 0,
         streak: 0,
+        categoryStats: { ...EMPTY_STATS }
       }))
       return {
         ...s,

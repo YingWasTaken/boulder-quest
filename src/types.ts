@@ -8,7 +8,7 @@ export type GameScreen =
   | 'game'
   | 'scoreboard'
 
-export type GameMode = 'infinite' | 'allVsAll' | 'teams' | 'allToOne' | 'duelo' | 'twister'
+export type GameMode = 'infinite' | 'allVsAll' | 'teams' | 'allToOne' | 'duelo' | 'twister' | 'speedrun'
 
 export const PLAYER_COLORS = [
   '#e53935', '#d81b60', '#8e24aa', '#5e35b1', '#3949ab',
@@ -43,8 +43,10 @@ export interface Card {
 export interface GameSettings {
   mode: GameMode
   roundsPerPlayer: number
-  difficultyFilter: number | 'all'
+  difficultyFilter: 'all' | 1 | 2 | 3
   categories: CardCategory[]
+  timedMode: boolean
+  timerSeconds: number
 }
 
 export interface PlayerScore {
@@ -53,6 +55,7 @@ export interface PlayerScore {
   completed: number
   failed: number
   streak: number
+  categoryStats: Record<CardCategory, number>
 }
 
 export type TwisterColor = 

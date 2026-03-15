@@ -3,7 +3,24 @@
   width: 100%;
   max-width: 340px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 1.5rem 1rem 0;
+}
+
+.game-card-timer-container {
+  position: absolute;
+  top: 0.25rem;
+  left: 1rem;
+  right: 1rem;
+  height: 0.75rem;
+  background: rgba(0, 0, 0, 0.1);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.game-card-timer-bar {
+  height: 100%;
+  background: var(--primary);
 }
 
 .game-card {

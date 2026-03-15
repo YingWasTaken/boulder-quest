@@ -2,6 +2,7 @@ import { motion, useMotionValue, useTransform } from 'framer-motion'
 import type { Card as CardType, CardCategory } from '../types'
 import { useApp } from '../context/AppContext'
 import { useTranslation } from '../hooks/useTranslation'
+import { useEffect, useState, useCallback } from 'react'
 import { CATEGORY_COLORS, STAT_ICONS } from '../constants/categories'
 import useSound from 'use-sound'
 import './GameCard.css'
@@ -18,6 +19,46 @@ export function GameCard({ card, onComplete, onFail, onDragChange }: GameCardPro
   const { settings, rerollTwisterColor } = useApp()
   const x = useMotionValue(0)
   const rotate = useTransform(x, [-200, 200], [-10, 10])
+
+  const [timeLeft, setTimeLeft] = useState(settings.timerSeconds)
+
+  const handleVibrate = useCallback((type: 'success' | 'fail') => {
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      if (type === 'success') {
+        navigator.vibrate(50)
+      } else {
+        navigator.vibrate([100, 50, 100])
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!settings.timedMode) return
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 0.1) {
+          clearInterval(timer)
+          handleVibrate('fail')
+          onFail()
+          return 0
+        }
+        return prev - 0.1
+      })
+    }, 100)
+
+    return () => clearInterval(timer)
+  }, [settings.timedMode, onFail, handleVibrate])
+
+  const handleComplete = () => {
+    handleVibrate('success')
+    onComplete()
+  }
+
+  const handleFail = () => {
+    handleVibrate('fail')
+    onFail()
+  }
 
   const [playSwipe] = useSound('/swipe.wav', { volume: 0.5 })
 
@@ -60,8 +101,20 @@ export function GameCard({ card, onComplete, onFail, onDragChange }: GameCardPro
   }
   const displayColor = twisterColorKey ? TWISTER_COLOR_MAP[twisterColorKey] : categoryColor
 
+  const timerProgress = settings.timedMode ? (timeLeft / settings.timerSeconds) * 100 : 0
+
   return (
     <div className="game-card-wrapper">
+      {settings.timedMode && (
+        <div className="game-card-timer-container">
+          <motion.div 
+            className="game-card-timer-bar"
+            initial={{ width: '100%' }}
+            animate={{ width: `${timerProgress}%` }}
+            transition={{ duration: 0.1, ease: 'linear' }}
+          />
+        </div>
+      )}
       <motion.div
         className="game-card"
         style={{
@@ -115,7 +168,7 @@ export function GameCard({ card, onComplete, onFail, onDragChange }: GameCardPro
         <button
           type="button"
           className="game-card-btn game-card-btn-fail"
-          onClick={onFail}
+          onClick={handleFail}
           aria-label={t('failChallenge')}
         >
           <i className="fa-solid fa-xmark" aria-hidden />
@@ -134,7 +187,7 @@ export function GameCard({ card, onComplete, onFail, onDragChange }: GameCardPro
         <button
           type="button"
           className="game-card-btn game-card-btn-complete"
-          onClick={onComplete}
+          onClick={handleComplete}
           aria-label={t('completeChallenge')}
         >
           <i className="fa-solid fa-check" aria-hidden />

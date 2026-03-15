@@ -20,6 +20,7 @@
   "modeAllToOne": "TODOS A UNA",
   "modeDuelo": "DUELO",
   "modeTwister": "TWISTER",
+  "modeSpeedrun": "CONTRARELOJ",
   "playMode": "Jugar",
   "backToSetup": "Volver a jugadores",
   "rounds": "Rondas",
@@ -65,6 +66,7 @@
   "modeAllToOneDesc": "Todos intentan el mismo reto en cada ronda.",
   "modeDueloDesc": "Todos a la vez. Si sale, todos ganáis puntos.",
   "modeTwisterDesc": "¡Escala por colores! A cada jugador le toca un color diferente cada ronda. No puedes repetir lo que ya ha escalado otro.",
+  "modeSpeedrunDesc": "¡Rápido! Tienes tiempo limitado para completar cada reto. Si el crono llega a cero, fallas automáticamente.",
   "allPlayers": "TODOS",
   "reroll": "Cambiar color",
   "red": "Rojo",
@@ -79,5 +81,10 @@
   "lightGreen": "Verde claro",
   "lightBlue": "Azul claro",
   "gray": "Gris",
-  "brown": "Marrón"
+  "brown": "Marrón",
+  "speedrunMode": "Modo Speedrun",
+  "activateTimer": "Activar Tiempo",
+  "seconds": "segundos",
+  "total": "Total",
+  "completedChallenges": "retos completados"
 }

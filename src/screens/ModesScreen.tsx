@@ -11,6 +11,7 @@ const MODES: { key: GameMode; titleKey: string; descKey: string; icon: string }[
   { key: 'allVsAll', titleKey: 'modeAllVsAll', descKey: 'modeAllVsAllDesc', icon: 'user-group' },
   { key: 'duelo', titleKey: 'modeDuelo', descKey: 'modeDueloDesc', icon: 'bolt' },
   { key: 'twister', titleKey: 'modeTwister', descKey: 'modeTwisterDesc', icon: 'palette' },
+  { key: 'speedrun', titleKey: 'modeSpeedrun', descKey: 'modeSpeedrunDesc', icon: 'clock' },
   // { key: 'teams', titleKey: 'modeTeams', descKey: 'modeTeamsDesc', icon: 'people-group' },
   // { key: 'allToOne', titleKey: 'modeAllToOne', descKey: 'modeAllToOneDesc', icon: 'bullseye' },
 ]
@@ -41,6 +42,7 @@ export function ModesScreen() {
   const handlePlayMode = (mode: GameMode) => {
     playClick()
     setModeModal(null)
+    setSettings({ timedMode: mode === 'speedrun' })
     startGame(mode)
   }
 
@@ -140,7 +142,7 @@ export function ModesScreen() {
                   key={lvl}
                   type="button"
                   className={`modes-diff-btn ${settings.difficultyFilter === lvl ? 'active' : ''}`}
-                  onClick={() => setSettings({ difficultyFilter: lvl })}
+                  onClick={() => setSettings({ difficultyFilter: lvl as 1 | 2 | 3 })}
                 >
                   {lvl}
                 </button>
@@ -162,6 +164,24 @@ export function ModesScreen() {
               ))}
             </div>
           </section>
+
+          {settings.mode === 'speedrun' && (
+            <section className="modes-section">
+              <h3 className="modes-section-title">{t('speedrunMode')}</h3>
+              <div className="modes-speedrun-row">
+                <div className="modes-timer-input">
+                  <input
+                    type="number"
+                    min={5}
+                    max={60}
+                    value={settings.timerSeconds}
+                    onChange={(e) => setSettings({ timerSeconds: Number(e.target.value) })}
+                  />
+                  <span>{t('seconds')}</span>
+                </div>
+              </div>
+            </section>
+          )}
         </div>
       )}
 

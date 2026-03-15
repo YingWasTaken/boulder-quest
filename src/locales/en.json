@@ -20,6 +20,7 @@
   "modeAllToOne": "ALL TO ONE",
   "modeDuelo": "DUEL",
   "modeTwister": "TWISTER",
+  "modeSpeedrun": "SPEEDRUN",
   "playMode": "Play",
   "backToSetup": "Back to players",
   "rounds": "Rounds",
@@ -63,8 +64,9 @@
   "modeAllVsAllDesc": "Each player accumulates points. Whoever has the most at the end wins.",
   "modeTeamsDesc": "Form teams and add up the team's points.",
   "modeAllToOneDesc": "Everyone attempts the same challenge each round.",
-  "modeDueloDesc": "Everyone at once. If completed, everyone gets points.",
-  "modeTwisterDesc": "Climb by colors! Each player gets a different color every round. You can't repeat what someone else already climbed.",
+  "modeDueloDesc": "Everyone at once. If it's done, everyone gets points.",
+  "modeTwisterDesc": "Climb by colors! Each player gets a different color each round. You cannot repeat what someone else already climbed.",
+  "modeSpeedrunDesc": "Quick! You have limited time to complete each challenge. If the timer reaches zero, you fail automatically.",
   "allPlayers": "EVERYONE",
   "reroll": "Reroll color",
   "red": "Red",
@@ -78,6 +80,11 @@
   "orange": "Orange",
   "lightGreen": "Light Green",
   "lightBlue": "Light Blue",
-  "gray": "Gray",
-  "brown": "Brown"
+  "gray": "Grey",
+  "brown": "Brown",
+  "speedrunMode": "Speedrun Mode",
+  "activateTimer": "Enable Timer",
+  "seconds": "seconds",
+  "total": "Total",
+  "completedChallenges": "challenges completed"
 }
