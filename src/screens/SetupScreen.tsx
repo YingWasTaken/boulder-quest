@@ -23,7 +23,7 @@ export function SetupScreen() {
       <header className="setup-header">
         <LanguageDropdown />
 
-        <img src="public/logo.png" alt="Boulder Quest" className="setup-logo" />
+        <img src="/logo.png" alt="Boulder Quest" className="setup-logo" />
 
         <button
           type="button"
