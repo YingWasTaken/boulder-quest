@@ -24,9 +24,12 @@ export interface Player {
   color: PlayerColor
 }
 
-export type CardCategory =
-  | 'strength' | 'speed' | 'resistance' | 'group' | 'team'
-  | 'balance' | 'technique' | 'coordination' | 'specialChallenges' | 'flexibility'
+export const ALL_CATEGORIES = [
+  'strength', 'speed', 'resistance', 'balance', 'technique',
+  'coordination', 'flexibility', 'specialChallenges', 'team', 'group',
+] as const
+
+export type CardCategory = (typeof ALL_CATEGORIES)[number]
 
 export interface Card {
   id: number

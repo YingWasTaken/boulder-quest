@@ -9,7 +9,7 @@ export const availableLangs: string[] = []
 for (const path in modules) {
   const langKey = path.split('/').pop()?.replace('.json', '')
   if (langKey) {
-    availableLocales[langKey] = (modules[path] as any).default || modules[path]
+    availableLocales[langKey] = (modules[path] as { default: Record<string, string> }).default
     availableLangs.push(langKey)
   }
 }
@@ -17,8 +17,8 @@ for (const path in modules) {
 export function useTranslation() {
   const { lang } = useApp()
   const t = useMemo(() => {
-    const dict = availableLocales[lang] ?? availableLocales['es'] ?? availableLocales[availableLangs[0]] ?? {};
-    return (key: string): string => dict[key] ?? key
+    const dict = availableLocales[lang] ?? availableLocales.es ?? {}
+    return (key: string): string => dict[key] ?? availableLocales.es?.[key] ?? key
   }, [lang])
   return { t, lang, availableLangs }
 }

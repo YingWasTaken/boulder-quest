@@ -24,7 +24,7 @@
   {
     "id": 1003,
     "title": "DÉFI D'ÉQUILIBRE",
-    "description": "Grimpe un bloc de niveau {nivel_usuario} sans utiliser ton/ta {parte_cuerpo}.",
+    "description": "Grimpe un bloc de niveau {nivel_usuario} sans utiliser {parte_cuerpo}.",
     "level": 2,
     "points": 3,
     "statType": "balance",
@@ -35,7 +35,7 @@
   {
     "id": 1004,
     "title": "DÉFI DE VITESSE",
-    "description": "Termine un bloc de prises {color_presa} en moins de {segundos} secondes.",
+    "description": "Termine un bloc de prises {color_presa} en moins de {segundos_bloque} secondes.",
     "level": 2,
     "points": 3,
     "statType": "speed",

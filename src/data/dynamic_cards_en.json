@@ -35,7 +35,7 @@
   {
     "id": 1004,
     "title": "SPEED CHALLENGE",
-    "description": "Complete a boulder of {color_presa} holds in under {segundos} seconds.",
+    "description": "Complete a boulder of {color_presa} holds in under {segundos_bloque} seconds.",
     "level": 2,
     "points": 3,
     "statType": "speed",

@@ -2180,7 +2180,7 @@
   {
     "id": 199,
     "title": "Pies Libres, Manos Verdes",
-    "description": "Pies en cualquier lugar, manos solo en presas verdes. Sujetate en 10 presas verdes.",
+    "description": "Pies en cualquier lugar, manos solo en presas verdes. Sujétate en 10 presas verdes.",
     "level": 1,
     "points": 3,
     "statType": "technique",
@@ -4390,7 +4390,7 @@
   },
   {
     "id": 400,
-    "title": "Comparte.",
+    "title": "Comparte",
     "description": "Ve a cualquier random del rocódromo y recomiéndale este juego. Si no se instala / busca el juego, no cuenta.",
     "level": 1,
     "points": 100,
@@ -5403,7 +5403,7 @@
   {
     "id": 492,
     "title": "La Serpiente",
-    "description": "Escula ondulando la cadera como una serpiente en cada movimiento. Ritmo.",
+    "description": "Escala ondulando la cadera como una serpiente en cada movimiento. Ritmo.",
     "level": 2,
     "points": 4,
     "statType": "flexibility",

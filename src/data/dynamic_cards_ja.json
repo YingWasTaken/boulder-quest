@@ -35,7 +35,7 @@
   {
     "id": 1004,
     "title": "スピードチャレンジ",
-    "description": "{color_presa}のホールドのボルダーを{segundos}秒以内に完了します。",
+    "description": "{color_presa}のホールドのボルダーを{segundos_bloque}秒以内に完了します。",
     "level": 2,
     "points": 3,
     "statType": "speed",

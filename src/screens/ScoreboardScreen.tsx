@@ -1,111 +1,134 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
+import { CheckCheck, Share2, X } from 'lucide-react'
+import confetti from 'canvas-confetti'
+import { toBlob } from 'html-to-image'
 import { useApp } from '../context/AppContext'
 import { useTranslation } from '../hooks/useTranslation'
-import { toPng } from 'html-to-image'
+import { Hold } from '../components/Hold'
+import { getPositions, getWinners, rankScores } from '../game/logic'
 import './ScoreboardScreen.css'
+
+const IMAGE_NAME = 'boulder-quest-results.png'
+
+async function shareImage(blob: Blob) {
+  const file = new File([blob], IMAGE_NAME, { type: 'image/png' })
+  if (navigator.canShare?.({ files: [file] })) {
+    await navigator.share({ files: [file], title: 'Boulder Quest' })
+    return
+  }
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.download = IMAGE_NAME
+  link.href = url
+  link.click()
+  URL.revokeObjectURL(url)
+}
 
 export function ScoreboardScreen() {
   const { t } = useTranslation()
-  const { scores, resetScoresAndPlayAgain, resetToModes, playClick } = useApp()
+  const { scores, playAgain, resetToModes, playClick, players } = useApp()
   const scoreboardRef = useRef<HTMLDivElement>(null)
 
-  const sorted = [...scores].sort((a, b) => b.points - a.points)
+  const ranked = rankScores(scores)
+  const positions = getPositions(ranked)
+  const winners = getWinners(scores)
+  const isSolo = players.length === 1 || scores.length === 1
+
+  useEffect(() => {
+    if (!winners.length) return
+    confetti({
+      particleCount: 130,
+      spread: 100,
+      origin: { y: 0.45 },
+      colors: ['#FF5E5E', '#FFE066', '#94D4FF', '#FF96E6', '#AEFF96'],
+      disableForReducedMotion: true,
+    })
+    // Celebrate once, when the results appear.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleShare = async () => {
     if (!scoreboardRef.current) return
     playClick()
     try {
-      const dataUrl = await toPng(scoreboardRef.current, {
-        backgroundColor: '#ffffff',
-        style: {
-          padding: '20px',
-        }
+      const blob = await toBlob(scoreboardRef.current, {
+        backgroundColor: '#FFF8E9',
+        pixelRatio: 2,
       })
-      const link = document.createElement('a')
-      link.download = `boulder-quest-results.png`
-      link.href = dataUrl
-      link.click()
+      if (blob) await shareImage(blob)
     } catch (err) {
-      console.error('Error sharing results:', err)
+      // Closing the system share sheet also lands here.
+      if (!(err instanceof DOMException && err.name === 'AbortError')) {
+        console.error('Error sharing results:', err)
+      }
     }
   }
 
+  const headline = isSolo
+    ? t('finalResult')
+    : winners.length === 1
+      ? t('winnerIs').replace('{name}', winners[0].player.nickname)
+      : winners.length > 1
+        ? t('tie')
+        : t('scoreboard')
+
   return (
-    <div className="scoreboard-screen">
-      <div 
-        ref={scoreboardRef} 
-        className="scoreboard-capture-area"
-        style={{ 
-          width: '100%', 
-          maxWidth: '400px', 
-          margin: '0 auto', 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center',
-          backgroundColor: '#fff',
-          padding: '20px',
-          borderRadius: '1rem',
-          border: 'var(--border-width) solid var(--border-color)',
-          boxShadow: 'var(--card-shadow)'
-        }}
-      >
-        <img src="/logo.png" alt="Boulder Quest" style={{ width: '120px', marginBottom: '1rem', objectFit: 'contain' }} onError={(e) => (e.currentTarget.style.display = 'none')} />
-        <h1 className="scoreboard-title">{t('scoreboard')}</h1>
-        <ul className="scoreboard-list" style={{ width: '100%' }}>
-          {sorted.map((entry, i) => (
-            <li 
-              key={entry.player.id} 
-              className="scoreboard-item"
-            >
-              <span className="scoreboard-rank">{i + 1}</span>
-              <div
-                className="scoreboard-avatar"
-                style={{ backgroundColor: entry.player.color }}
-              />
+    <div className="page scoreboard-screen">
+      <div ref={scoreboardRef} className="scoreboard-capture">
+        <div className="scoreboard-hero">
+          <Hold size={84} color={winners.length === 1 ? winners[0].player.color : undefined} />
+          <h1 className="scoreboard-title">{headline}</h1>
+        </div>
+
+        <ol className="scoreboard-list">
+          {ranked.map((entry, index) => (
+            <li key={entry.player.id} className={`scoreboard-item ${positions[index] === 1 ? 'first' : ''}`}>
+              <span className="scoreboard-rank">{positions[index]}</span>
+              <Hold size={40} color={entry.player.color} />
               <div className="scoreboard-info">
                 <span className="scoreboard-name">{entry.player.nickname}</span>
                 <span className="scoreboard-meta">
-                  {entry.completed} ✓ / {entry.failed} ✕
+                  <CheckCheck size={15} strokeWidth={3} aria-label={t('completedChallenges')} /> {entry.completed}
+                  <X size={15} strokeWidth={3} aria-label={t('failedChallenges')} /> {entry.failed}
                 </span>
               </div>
-              <span className="scoreboard-points">{entry.points}</span>
+              <span className="scoreboard-points">
+                {entry.points}
+                <small>{t('pointsShort')}</small>
+              </span>
             </li>
           ))}
-        </ul>
+        </ol>
+        <p className="scoreboard-brand" translate="no">Boulder Quest</p>
       </div>
 
       <div className="scoreboard-actions">
         <button
           type="button"
-          className="scoreboard-btn scoreboard-btn-primary"
-          onClick={handleShare}
-          style={{ backgroundColor: '#10B981', color: '#fff' }}
-        >
-          <i className="fa-solid fa-share-nodes" style={{ marginRight: '8px' }}></i>
-          {t('shareVictory')}
-        </button>
-
-        <button
-          type="button"
-          className="scoreboard-btn scoreboard-btn-primary"
+          className="btn"
           onClick={() => {
             playClick()
-            resetScoresAndPlayAgain()
+            playAgain()
           }}
         >
           {t('playAgain')}
         </button>
-        
-        <button
-          type="button"
-          className="scoreboard-btn scoreboard-btn-secondary"
-          onClick={() => {
-            playClick()
-            resetToModes()
-          }}
-        >
-          {t('backToMenu')}
-        </button>
+        <div className="scoreboard-secondary">
+          <button type="button" className="btn btn-quiet btn-sky" onClick={handleShare}>
+            <Share2 size={20} strokeWidth={2.75} aria-hidden />
+            {t('shareVictory')}
+          </button>
+          <button
+            type="button"
+            className="btn btn-quiet"
+            onClick={() => {
+              playClick()
+              resetToModes()
+            }}
+          >
+            {t('backToMenu')}
+          </button>
+        </div>
       </div>
     </div>
   )

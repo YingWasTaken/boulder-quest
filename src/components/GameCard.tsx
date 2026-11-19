@@ -1,222 +1,173 @@
-import { motion, useMotionValue, useTransform, AnimatePresence } from 'framer-motion'
-import type { Card as CardType, CardCategory } from '../types'
-import { useApp } from '../context/AppContext'
+import { useEffect, useRef, useState } from 'react'
+import { motion, useIsPresent, useMotionValue, useTransform, type MotionValue, type PanInfo } from 'framer-motion'
+import { Flame, Timer } from 'lucide-react'
+import type { Card } from '../types'
+import { CATEGORY_COLORS, CATEGORY_ICONS, TWISTER_COLOR_VALUES } from '../constants/categories'
 import { useTranslation } from '../hooks/useTranslation'
-import { useEffect, useState, useCallback } from 'react'
-import { CATEGORY_COLORS, STAT_ICONS } from '../constants/categories'
-import useSound from 'use-sound'
+import { CardArt } from './CardArt'
+import { Hold } from './Hold'
 import './GameCard.css'
 
-interface GameCardProps {
-  card: CardType
-  onComplete: () => void
-  onFail: () => void
-  onDragChange?: (dx: number) => void
+const SWIPE_THRESHOLD = 100
+
+const cardVariants = {
+  enter: { scale: 0.92, y: 18, opacity: 0 },
+  center: { scale: 1, y: 0, opacity: 1 },
+  exit: (direction: number) =>
+    direction === 0
+      ? { y: 70, scale: 0.9, opacity: 0, transition: { duration: 0.2 } }
+      : {
+          x: direction * Math.max(window.innerWidth, 500),
+          rotate: direction * 16,
+          transition: { duration: 0.3, ease: 'easeIn' as const },
+        },
 }
 
-export function GameCard({ card, onComplete, onFail, onDragChange }: GameCardProps) {
+interface GameCardProps {
+  card: Card
+  timerSeconds: number | null
+  paused: boolean
+  dragOffset: MotionValue<number>
+  onComplete: () => void
+  onFail: () => void
+}
+
+export function GameCard({ card, timerSeconds, paused, dragOffset, onComplete, onFail }: GameCardProps) {
   const { t } = useTranslation()
-  const { settings, rerollTwisterColor, rerollCard } = useApp()
+  const isPresent = useIsPresent()
   const x = useMotionValue(0)
-  const rotate = useTransform(x, [-200, 200], [-10, 10])
+  const rotate = useTransform(x, [-220, 220], [-9, 9])
+  const doneStamp = useTransform(x, [24, SWIPE_THRESHOLD], [0, 1])
+  const failStamp = useTransform(x, [-SWIPE_THRESHOLD, -24], [1, 0])
 
-  const [timeLeft, setTimeLeft] = useState(settings.timerSeconds)
-  const [showPenalty, setShowPenalty] = useState(false)
+  const timeLeft = useCountdown(timerSeconds, paused || !isPresent, onFail)
 
-  const handleVibrate = useCallback((type: 'success' | 'fail') => {
-    if (typeof navigator !== 'undefined' && navigator.vibrate) {
-      if (type === 'success') {
-        navigator.vibrate(50)
-      } else {
-        navigator.vibrate([100, 50, 100])
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!settings.timedMode) return
-
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 0.1) {
-          clearInterval(timer)
-          handleVibrate('fail')
-          onFail()
-          return 0
-        }
-        return prev - 0.1
-      })
-    }, 100)
-
-    return () => clearInterval(timer)
-  }, [settings.timedMode, onFail, handleVibrate])
-
-  const handleComplete = () => {
-    handleVibrate('success')
-    onComplete()
+  const handleDragEnd = (_: PointerEvent, info: PanInfo) => {
+    dragOffset.set(0)
+    if (info.offset.x > SWIPE_THRESHOLD) onComplete()
+    else if (info.offset.x < -SWIPE_THRESHOLD) onFail()
   }
 
-  const handleFail = () => {
-    handleVibrate('fail')
-    onFail()
-  }
-
-  const [playSwipe] = useSound('/swipe.wav', { volume: 0.5 })
-
-  const handleDrag = (_: any, info: any) => {
-    onDragChange?.(info.offset.x)
-    // Haptic feedback while dragging
-    if (Math.abs(info.delta.x) > 5) {
-      if (Math.random() < 0.2) navigator.vibrate?.(10)
-    }
-  }
-
-  const handleDragEnd = (_: any, info: any) => {
-    onDragChange?.(0)
-    const threshold = 100
-    if (info.offset.x > threshold) {
-      navigator.vibrate?.([10, 50, 10])
-      playSwipe()
-      onComplete()
-    } else if (info.offset.x < -threshold) {
-      navigator.vibrate?.([10, 50, 10])
-      playSwipe()
-      onFail()
-    }
-  }
-
-  const category = card.statType as CardCategory
-  const categoryLabel = t(category) || card.statType
-  const categoryColor = CATEGORY_COLORS[category] ?? '#6B7280'
-  const iconName = STAT_ICONS[category] ?? 'circle'
-
-  const isTwister = settings.mode === 'twister'
-  const isDuelo = settings.mode === 'duelo'
-  const twisterColorKey = isTwister ? card.description : null
-  
-  // Mapping of Twister color keys to hex/css colors for visual display
-  const TWISTER_COLOR_MAP: Record<string, string> = {
-    red: '#ef4444', blue: '#3b82f6', purple: '#a855f7', yellow: '#eab308', 
-    pink: '#ec4899', green: '#22c55e', black: '#000000', white: '#ffffff', 
-    orange: '#f97316', lightGreen: '#86efac', lightBlue: '#93c5fd', 
-    gray: '#9ca3af', brown: '#92400e'
-  }
-  const displayColor = twisterColorKey ? TWISTER_COLOR_MAP[twisterColorKey] : categoryColor
-
-  const timerProgress = settings.timedMode ? (timeLeft / settings.timerSeconds) * 100 : 0
+  const isTwister = card.mode === 'twister'
+  const category = card.statType
+  const color = isTwister ? '#FFF8E9' : CATEGORY_COLORS[category]
+  const Icon = CATEGORY_ICONS[category]
+  const lowTime = timeLeft !== null && timeLeft <= 5
 
   return (
-    <div className="game-card-wrapper">
-      <AnimatePresence>
-        {showPenalty && (
-          <motion.div
-            className="floating-penalty"
-            initial={{ opacity: 0, scale: 0.5, y: 0 }}
-            animate={{ opacity: 1, scale: 1.5, y: -100 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            -1
-          </motion.div>
+    <motion.article
+      className="game-card"
+      custom={0}
+      variants={cardVariants}
+      initial="enter"
+      animate="center"
+      exit="exit"
+      transition={{ type: 'spring', damping: 22, stiffness: 300 }}
+      style={{ x, rotate, ['--category-color' as string]: color }}
+      drag={isPresent ? 'x' : false}
+      dragSnapToOrigin
+      dragElastic={0.75}
+      onDrag={(_, info) => dragOffset.set(info.offset.x)}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="game-card-art">
+        <CardArt color={color} seed={card.id} />
+        <span className="game-card-category">
+          {!isTwister && <Icon size={16} strokeWidth={3} aria-hidden />}
+          {isTwister ? t('modeTwister') : t(category)}
+        </span>
+        <span className="game-card-points">+{card.points}</span>
+
+        {timeLeft !== null && (
+          <span className={`game-card-countdown ${lowTime ? 'low' : ''}`} role="timer">
+            <Timer size={24} strokeWidth={3} aria-hidden />
+            {Math.ceil(timeLeft)}
+          </span>
         )}
-      </AnimatePresence>
-      {settings.timedMode && (
-        <div className="game-card-timer-container">
-          <motion.div 
-            className="game-card-timer-bar"
-            initial={{ width: '100%' }}
-            animate={{ width: `${timerProgress}%` }}
-            transition={{ duration: 0.1, ease: 'linear' }}
+        {isTwister && timeLeft === null && (
+          <Hold size="clamp(96px, 28dvh, 210px)" color={TWISTER_COLOR_VALUES[card.description]} className="game-card-twister-hold" />
+        )}
+      </div>
+
+      {timeLeft !== null && timerSeconds !== null && (
+        <div className="game-card-timer" aria-hidden>
+          <div
+            className={`game-card-timer-bar ${lowTime ? 'low' : ''}`}
+            style={{ transform: `scaleX(${timeLeft / timerSeconds})` }}
           />
         </div>
       )}
-      <motion.div
-        className="game-card"
-        style={{
-          x,
-          rotate,
-          ['--category-color' as string]: categoryColor,
-        }}
-        drag="x"
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.8}
-        onDrag={handleDrag}
-        onDragEnd={handleDragEnd}
-        whileTap={{ scale: 0.95 }}
-      >
-        <div className="game-card-image-wrap">
-          {card.imageSrc ? (
-            <img src={card.imageSrc} alt="" className="game-card-image" />
-          ) : (
-            <div
-              className="game-card-image-placeholder"
-              style={{ backgroundColor: categoryColor }}
-            />
-          )}
-        </div>
-        <div className="game-card-body">
-          <h3 className="game-card-title">{isTwister ? t('modeTwister') : card.title}</h3>
-          {isTwister ? (
-             <div className="game-card-twister-content">
-               <div 
-                 className="game-card-twister-blob" 
-                 style={{ backgroundColor: displayColor, border: displayColor === '#ffffff' ? '1px solid #ccc' : 'none' }} 
-               />
-               <p className="game-card-twister-label">{t(twisterColorKey!)}</p>
-             </div>
-          ) : (
+
+      <div className="game-card-body">
+        {isTwister ? (
+          <>
+            <h2 className="game-card-title">{t(card.description)}</h2>
+            <p className="game-card-desc">{t('twisterPrompt')}</p>
+          </>
+        ) : (
+          <>
+            <h2 className="game-card-title">{card.title}</h2>
             <p className="game-card-desc">{card.description}</p>
-          )}
-          <div className="game-card-meta">
-            <span className="game-card-points">{card.points} {t('points')}</span>
-            <span className="game-card-level">Lv.{card.level}</span>
-            <span className="game-card-tries">{card.tries} {t('tries')}</span>
-          </div>
-        </div>
-        <div className="game-card-category-bar" style={{ backgroundColor: categoryColor }}>
-          <i className={`fa-solid fa-${iconName} game-card-cat-icon`} aria-hidden />
-          <span className="game-card-category-name">{categoryLabel}</span>
-          <i className={`fa-solid fa-${iconName} game-card-cat-icon`} aria-hidden />
-        </div>
-      </motion.div>
-      <div className="game-card-actions">
-        <button
-          type="button"
-          className="game-card-btn game-card-btn-fail"
-          onClick={handleFail}
-          aria-label={t('failChallenge')}
-        >
-          <i className="fa-solid fa-xmark" aria-hidden />
-        </button>
-        {(isTwister || !isDuelo) && (
-          <button
-            type="button"
-            className="game-card-btn game-card-btn-reroll"
-            onClick={() => {
-              if (isTwister) {
-                rerollTwisterColor(card.id)
-              } else {
-                rerollCard()
-              }
-              setShowPenalty(true)
-              setTimeout(() => setShowPenalty(false), 800)
-            }}
-            aria-label={t('reroll')}
-            title={t('reroll')}
-          >
-            <i className="fa-solid fa-rotate-right" aria-hidden />
-            <span className="reroll-penalty-label">-1</span>
-          </button>
+          </>
         )}
-        <button
-          type="button"
-          className="game-card-btn game-card-btn-complete"
-          onClick={handleComplete}
-          aria-label={t('completeChallenge')}
-        >
-          <i className="fa-solid fa-check" aria-hidden />
-        </button>
+
+        <dl className="game-card-stats">
+          <div>
+            <dt>{t('difficulty')}</dt>
+            <dd className="game-card-level" aria-label={t(`level${card.level}`)}>
+              {[1, 2, 3].map((level) => (
+                <Flame
+                  key={level}
+                  size={18}
+                  strokeWidth={2.75}
+                  className={level <= card.level ? 'on' : ''}
+                  aria-hidden
+                />
+              ))}
+            </dd>
+          </div>
+          <div>
+            <dt>{t('tries')}</dt>
+            <dd>{card.tries}</dd>
+          </div>
+        </dl>
       </div>
-    </div>
+
+      <motion.span className="game-card-stamp done" style={{ opacity: doneStamp }} aria-hidden>
+        {t('stampDone')}
+      </motion.span>
+      <motion.span className="game-card-stamp fail" style={{ opacity: failStamp }} aria-hidden>
+        {t('stampFail')}
+      </motion.span>
+    </motion.article>
   )
+}
+
+/** Seconds left on the challenge; calls onTimeUp once when it reaches zero. */
+function useCountdown(seconds: number | null, paused: boolean, onTimeUp: () => void) {
+  const [timeLeft, setTimeLeft] = useState(seconds)
+  const remaining = useRef(seconds ?? 0)
+  const timeUpHandler = useRef(onTimeUp)
+
+  useEffect(() => {
+    timeUpHandler.current = onTimeUp
+  }, [onTimeUp])
+
+  useEffect(() => {
+    if (seconds === null || paused) return
+    let last = performance.now()
+    const timer = setInterval(() => {
+      const now = performance.now()
+      remaining.current = Math.max(0, remaining.current - (now - last) / 1000)
+      last = now
+      setTimeLeft(remaining.current)
+      if (remaining.current === 0) {
+        clearInterval(timer)
+        timeUpHandler.current()
+      }
+    }, 100)
+    return () => clearInterval(timer)
+  }, [seconds, paused])
+
+  return timeLeft
 }

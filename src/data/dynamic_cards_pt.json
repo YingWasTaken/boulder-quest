@@ -24,7 +24,7 @@
   {
     "id": 1003,
     "title": "DESAFIO DE EQUILÍBRIO",
-    "description": "Escala um bloco de grau {nivel_usuario} sem usar a(o) teu(tua) {parte_cuerpo}.",
+    "description": "Escala um bloco de grau {nivel_usuario} sem usar {parte_cuerpo}.",
     "level": 2,
     "points": 3,
     "statType": "balance",
@@ -35,7 +35,7 @@
   {
     "id": 1004,
     "title": "DESAFIO DE VELOCIDADE",
-    "description": "Completa um bloco de presas {color_presa} em menos de {segundos} segundos.",
+    "description": "Completa um bloco de presas {color_presa} em menos de {segundos_bloque} segundos.",
     "level": 2,
     "points": 3,
     "statType": "speed",

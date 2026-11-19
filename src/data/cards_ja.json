@@ -1226,7 +1226,7 @@
     "description": "足を動かすたびに、強く落としてください（大きな音を立てます）。",
     "level": 1,
     "points": 1,
-    "statType": "technique",
+    "statType": "specialChallenges",
     "tries": 1,
     "imageSrc": null,
     "mode": "All"

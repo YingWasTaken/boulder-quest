@@ -1,204 +1,234 @@
 import { useState } from 'react'
-import { useApp } from '../context/AppContext'
+import {
+  ArrowLeft,
+  ChevronRight,
+  Infinity as InfinityIcon,
+  Palette,
+  Swords,
+  Timer,
+  UsersRound,
+  type LucideIcon,
+} from 'lucide-react'
+import { useApp, getCardsPool } from '../context/AppContext'
 import { useTranslation } from '../hooks/useTranslation'
-import { ModeModal } from '../components/ModeModal'
+import { CATEGORY_COLORS, CATEGORY_ICONS } from '../constants/categories'
 import { LanguageDropdown } from '../components/LanguageDropdown'
-import type { GameMode } from '../types'
+import { Modal } from '../components/Modal'
+import { Stepper } from '../components/Stepper'
+import { filterCards } from '../game/logic'
+import { ALL_CATEGORIES, type CardCategory, type GameMode } from '../types'
 import './ModesScreen.css'
 
-const MODES: { key: GameMode; titleKey: string; descKey: string; icon: string }[] = [
-  { key: 'infinite', titleKey: 'modeInfinite', descKey: 'modeInfiniteDesc', icon: 'infinity' },
-  { key: 'allVsAll', titleKey: 'modeAllVsAll', descKey: 'modeAllVsAllDesc', icon: 'user-group' },
-  { key: 'duelo', titleKey: 'modeDuelo', descKey: 'modeDueloDesc', icon: 'bolt' },
-  { key: 'twister', titleKey: 'modeTwister', descKey: 'modeTwisterDesc', icon: 'palette' },
-  { key: 'speedrun', titleKey: 'modeSpeedrun', descKey: 'modeSpeedrunDesc', icon: 'clock' },
-  // { key: 'teams', titleKey: 'modeTeams', descKey: 'modeTeamsDesc', icon: 'people-group' },
-  // { key: 'allToOne', titleKey: 'modeAllToOne', descKey: 'modeAllToOneDesc', icon: 'bullseye' },
+interface ModeDefinition {
+  key: GameMode
+  titleKey: string
+  descKey: string
+  Icon: LucideIcon
+  color: string
+}
+
+const MODES: ModeDefinition[] = [
+  { key: 'allVsAll', titleKey: 'modeAllVsAll', descKey: 'modeAllVsAllDesc', Icon: UsersRound, color: '#FF7A70' },
+  { key: 'infinite', titleKey: 'modeInfinite', descKey: 'modeInfiniteDesc', Icon: InfinityIcon, color: '#94D4FF' },
+  { key: 'duelo', titleKey: 'modeDuelo', descKey: 'modeDueloDesc', Icon: Swords, color: '#FFE066' },
+  { key: 'twister', titleKey: 'modeTwister', descKey: 'modeTwisterDesc', Icon: Palette, color: '#FF96E6' },
+  { key: 'speedrun', titleKey: 'modeSpeedrun', descKey: 'modeSpeedrunDesc', Icon: Timer, color: '#AEFF96' },
 ]
 
-const CATEGORY_KEYS = [
-  'strength', 'speed', 'resistance', 'group', 'team',
-  'balance', 'technique', 'coordination', 'specialChallenges', 'flexibility',
-] as const
+const MIN_ROUNDS = 1
+const MAX_ROUNDS = 20
+const MIN_TIMER = 10
+const MAX_TIMER = 120
+const TIMER_STEP = 5
+
+const SOLO_BLOCKED: CardCategory[] = ['team', 'group']
 
 export function ModesScreen() {
   const { t } = useTranslation()
-  const {
-    setScreen,
-    setSettings,
-    settings,
-    startGame,
-    players,
-    playClick
-  } = useApp()
+  const { setScreen, setSettings, settings, startGame, players, playClick, lang } = useApp()
   const [tab, setTab] = useState<'modes' | 'personalize'>('modes')
-  const [modeModal, setModeModal] = useState<GameMode | null>(null)
+  const [selected, setSelected] = useState<GameMode | null>(null)
 
-  const handleModeClick = (mode: GameMode) => {
+  const isSolo = players.length === 1
+  const visibleModes = MODES.filter((mode) => !(isSolo && mode.key === 'duelo'))
+  const modeTitle = (mode: ModeDefinition) =>
+    isSolo && mode.key === 'allVsAll' ? t('modeSingleplayer') : t(mode.titleKey)
+
+  const availableCards = filterCards(getCardsPool(lang), settings, players.length).length
+  const selectedMode = MODES.find((mode) => mode.key === selected)
+
+  const toggleCategory = (category: CardCategory) => {
     playClick()
-    setModeModal(mode)
+    const isOn = settings.categories.includes(category)
+    if (isOn && settings.categories.length === 1) return // Keep at least one active.
+    setSettings({
+      categories: isOn
+        ? settings.categories.filter((c) => c !== category)
+        : [...settings.categories, category],
+    })
   }
 
-  const handlePlayMode = (mode: GameMode) => {
-    playClick()
-    setModeModal(null)
-    setSettings({ timedMode: mode === 'speedrun' })
-    startGame(mode)
-  }
+  const roundsStepper = (
+    <Stepper
+      label={t('rounds')}
+      unit={t('roundsPerPlayer')}
+      value={settings.roundsPerPlayer}
+      min={MIN_ROUNDS}
+      max={MAX_ROUNDS}
+      onChange={(roundsPerPlayer) => setSettings({ roundsPerPlayer })}
+    />
+  )
 
-  const toggleCategory = (cat: (typeof CATEGORY_KEYS)[number]) => {
-    playClick()
-    const next = settings.categories.includes(cat)
-      ? settings.categories.filter((c) => c !== cat)
-      : [...settings.categories, cat]
-    setSettings({ categories: next })
-  }
+  const timerStepper = (
+    <Stepper
+      label={t('timerPerCard')}
+      unit={t('seconds')}
+      value={settings.timerSeconds}
+      min={MIN_TIMER}
+      max={MAX_TIMER}
+      step={TIMER_STEP}
+      onChange={(timerSeconds) => setSettings({ timerSeconds })}
+    />
+  )
 
   return (
-    <div className="modes-screen">
+    <div className="page modes-screen">
       <header className="modes-header">
         <button
           type="button"
-          className="modes-back"
+          className="icon-btn"
           onClick={() => {
             playClick()
             setScreen('setup')
           }}
           aria-label={t('backToSetup')}
         >
-          ← {t('backToSetup')}
+          <ArrowLeft size={22} strokeWidth={3} aria-hidden />
         </button>
         <LanguageDropdown />
       </header>
 
-      <div className="modes-tabs">
-        <button
-          type="button"
-          className={`modes-tab ${tab === 'modes' ? 'active' : ''}`}
-          onClick={() => setTab('modes')}
-        >
-          {t('modes')}
-        </button>
-        <button
-          type="button"
-          className={`modes-tab ${tab === 'personalize' ? 'active' : ''}`}
-          onClick={() => setTab('personalize')}
-        >
-          {t('personalize')}
-        </button>
+      <div className="modes-tabs" role="tablist">
+        {(['modes', 'personalize'] as const).map((key) => (
+          <button
+            key={key}
+            type="button"
+            role="tab"
+            aria-selected={tab === key}
+            className={`modes-tab ${tab === key ? 'active' : ''}`}
+            onClick={() => setTab(key)}
+          >
+            {t(key)}
+          </button>
+        ))}
       </div>
 
       {tab === 'modes' && (
         <div className="modes-list">
-          {MODES.map((m) => {
-            const isSingleplayer = players.length === 1 && m.key === 'allVsAll'
-            const title = isSingleplayer ? t('modeSingleplayer') : t(m.titleKey)
-            return (
-              <button
-                key={m.key}
-                type="button"
-                className="modes-mode-btn"
-                onClick={() => handleModeClick(m.key)}
-              >
-                <span>{title}</span>
-                <i className={`fa-solid fa-${m.icon} modes-mode-icon`} aria-hidden />
-              </button>
-            )
-          })}
+          {visibleModes.map((mode) => (
+            <button
+              key={mode.key}
+              type="button"
+              className="mode-card"
+              onClick={() => {
+                playClick()
+                setSelected(mode.key)
+              }}
+            >
+              <span className="mode-card-icon" style={{ backgroundColor: mode.color }}>
+                <mode.Icon size={28} strokeWidth={2.75} aria-hidden />
+              </span>
+              <span className="mode-card-text">
+                <span className="mode-card-title">{modeTitle(mode)}</span>
+                <span className="mode-card-desc">{t(mode.descKey)}</span>
+              </span>
+              <ChevronRight size={24} strokeWidth={3} className="mode-card-arrow" aria-hidden />
+            </button>
+          ))}
         </div>
       )}
 
       {tab === 'personalize' && (
         <div className="modes-personalize">
           <section className="modes-section">
-            <h3 className="modes-section-title">{t('rounds')}</h3>
-            <div className="modes-rounds-row">
-              <input
-                type="number"
-                min={1}
-                max={20}
-                value={settings.roundsPerPlayer}
-                onChange={(e) =>
-                  setSettings({
-                    roundsPerPlayer: Math.max(1, Math.min(20, Number(e.target.value) || 1)),
-                  })
-                }
-              />
-              <span>{t('roundsPerPlayer')}</span>
-            </div>
+            <h2 className="modes-section-title">{t('rounds')}</h2>
+            {roundsStepper}
           </section>
+
           <section className="modes-section">
-            <h3 className="modes-section-title">{t('difficulty')}</h3>
-            <div className="modes-difficulty-row">
-              <button
-                type="button"
-                className={`modes-diff-btn ${settings.difficultyFilter === 'all' ? 'active' : ''}`}
-                onClick={() => setSettings({ difficultyFilter: 'all' })}
-              >
-                {t('allDifficulties')}
-              </button>
-              {[1, 2, 3].map((lvl) => (
+            <h2 className="modes-section-title">{t('timerPerCard')}</h2>
+            {timerStepper}
+          </section>
+
+          <section className="modes-section">
+            <h2 className="modes-section-title">{t('difficulty')}</h2>
+            <div className="modes-difficulty">
+              {(['all', 1, 2, 3] as const).map((level) => (
                 <button
-                  key={lvl}
+                  key={level}
                   type="button"
-                  className={`modes-diff-btn ${settings.difficultyFilter === lvl ? 'active' : ''}`}
-                  onClick={() => setSettings({ difficultyFilter: lvl as 1 | 2 | 3 })}
+                  aria-pressed={settings.difficultyFilter === level}
+                  className={`modes-difficulty-btn ${settings.difficultyFilter === level ? 'active' : ''}`}
+                  onClick={() => {
+                    playClick()
+                    setSettings({ difficultyFilter: level })
+                  }}
                 >
-                  {lvl}
+                  {level === 'all' ? t('allDifficulties') : t(`level${level}`)}
                 </button>
               ))}
             </div>
           </section>
+
           <section className="modes-section">
-            <h3 className="modes-section-title">{t('categories')}</h3>
+            <div className="modes-section-heading">
+              <h2 className="modes-section-title">{t('categories')}</h2>
+              <span className="modes-card-count">
+                {availableCards} {t('challenges')}
+              </span>
+            </div>
             <div className="modes-categories">
-              {CATEGORY_KEYS.map((key) => (
-                <label key={key} className="modes-cat-label">
-                  <input
-                    type="checkbox"
-                    checked={settings.categories.includes(key)}
-                    onChange={() => toggleCategory(key)}
-                  />
-                  <span>{t(key)}</span>
-                </label>
-              ))}
+              {ALL_CATEGORIES.map((category) => {
+                const Icon = CATEGORY_ICONS[category]
+                const isOn = settings.categories.includes(category)
+                const blocked = isSolo && SOLO_BLOCKED.includes(category)
+                return (
+                  <button
+                    key={category}
+                    type="button"
+                    aria-pressed={isOn && !blocked}
+                    disabled={blocked}
+                    title={blocked ? t('needsTwoPlayers') : undefined}
+                    className={`modes-category ${isOn && !blocked ? 'active' : ''}`}
+                    style={{ ['--category-color' as string]: CATEGORY_COLORS[category] }}
+                    onClick={() => toggleCategory(category)}
+                  >
+                    <Icon size={18} strokeWidth={2.75} aria-hidden />
+                    {t(category)}
+                  </button>
+                )
+              })}
             </div>
           </section>
-
-          {settings.mode === 'speedrun' && (
-            <section className="modes-section">
-              <h3 className="modes-section-title">{t('speedrunMode')}</h3>
-              <div className="modes-speedrun-row">
-                <div className="modes-timer-input">
-                  <input
-                    type="number"
-                    min={5}
-                    max={60}
-                    value={settings.timerSeconds}
-                    onChange={(e) => setSettings({ timerSeconds: Number(e.target.value) })}
-                  />
-                  <span>{t('seconds')}</span>
-                </div>
-              </div>
-            </section>
-          )}
         </div>
       )}
 
-      {modeModal && (() => {
-        const modeDef = MODES.find((m) => m.key === modeModal)!
-        const isSingleplayer = players.length === 1 && modeModal === 'allVsAll'
-        const title = isSingleplayer ? t('modeSingleplayer') : t(modeDef.titleKey)
-        return (
-          <ModeModal
-            title={title}
-            description={t(modeDef.descKey)}
-            playLabel={t('playMode')}
-            onPlay={() => handlePlayMode(modeModal)}
-            onClose={() => setModeModal(null)}
-          />
-        )
-      })()}
+      {selectedMode && (
+        <Modal
+          title={modeTitle(selectedMode)}
+          primaryButtonLabel={t('playMode')}
+          onPrimary={() => {
+            playClick()
+            setSelected(null)
+            startGame(selectedMode.key)
+          }}
+          onClose={() => setSelected(null)}
+        >
+          <p className="mode-sheet-desc">{t(selectedMode.descKey)}</p>
+          {selectedMode.key !== 'infinite' && <div className="mode-sheet-option">{roundsStepper}</div>}
+          {selectedMode.key === 'speedrun' && <div className="mode-sheet-option">{timerStepper}</div>}
+        </Modal>
+      )}
     </div>
   )
 }

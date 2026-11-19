@@ -1,21 +1,31 @@
+@import '@fontsource-variable/bricolage-grotesque';
+@import '@fontsource-variable/figtree';
+
 :root {
-  --bg: #F0F2F5;
-  --bg-card: #FFFFFF;
-  --text: #000000;
-  --text-muted: #4B5563;
-  --primary: #FF5E5E;
-  --primary-hover: #FF4444;
-  --secondary: #4338CA;
-  --accent: #FFD700; /* Vibrant Gold */
-  --error: #FF0000;
-  --white: #FFFFFF;
-  
-  /* Neubrutalist Tokens */
-  --border-width: 3px;
-  --border-color: #000000;
-  --card-shadow: 6px 6px 0px #000000;
-  --btn-shadow: 4px 4px 0px #000000;
-  --btn-shadow-active: 1px 1px 0px #000000;
+  /* Colours taken from the logo */
+  --ink: #16130F;
+  --paper: #FFF8E9;
+  --paper-deep: #F6EBD2;
+  --surface: #FFFFFF;
+  --muted: #5E574B;
+  --coral: #FF5E5E;
+  --sun: #FFE066;
+  --sky: #94D4FF;
+  --pink: #FF96E6;
+  --lime: #AEFF96;
+
+  --font-display: 'Bricolage Grotesque Variable', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', system-ui, sans-serif;
+  --font-body: 'Figtree Variable', 'Hiragino Sans', 'Yu Gothic UI', system-ui, sans-serif;
+
+  --line: 3px solid var(--ink);
+  --shadow: 5px 5px 0 var(--ink);
+  --shadow-sm: 3px 3px 0 var(--ink);
+  --radius: 18px;
+  --radius-sm: 12px;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --gutter: 16px;
 }
 
 *, *::before, *::after {
@@ -23,33 +33,179 @@
 }
 
 html {
-  font-size: 16px;
-  -webkit-text-size-adjust: 100%;
   height: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (pointer: fine) {
+  html {
+    overscroll-behavior: none;
+  }
 }
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-  background: var(--bg);
-  color: var(--text);
   min-height: 100vh;
   min-height: 100dvh;
-  width: 100vw;
-  line-height: 1.5;
-  /* position: fixed; removed to allow scrolling if needed */
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.45;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
 }
 
 #root {
   min-height: 100vh;
   min-height: 100dvh;
-  width: 100vw;
+}
+
+button, input {
+  font: inherit;
+  color: inherit;
 }
 
 button {
-  font-family: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
-input, button {
-  font-size: inherit;
+button:disabled {
+  cursor: not-allowed;
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  line-height: 1.05;
+  margin: 0;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Screens enter once when they open; nothing moves on scroll. */
+.page > * {
+  animation: screen-enter 0.32s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+.page > :nth-child(2) { animation-delay: 0.04s; }
+.page > :nth-child(3) { animation-delay: 0.08s; }
+.page > :nth-child(n + 4) { animation-delay: 0.12s; }
+
+@keyframes screen-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* Page frame for every menu screen */
+.page {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: calc(var(--safe-top) + 14px) var(--gutter) calc(var(--safe-bottom) + 18px);
+  display: flex;
+  flex-direction: column;
+}
+
+.page-footer {
+  margin-top: auto;
+  padding-top: 20px;
+  position: sticky;
+  bottom: calc(var(--safe-bottom) + 18px);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 60px;
+  padding: 12px 20px;
+  border: var(--line);
+  border-radius: var(--radius);
+  background: var(--coral);
+  box-shadow: var(--shadow);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  color: var(--ink);
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.btn:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.btn:disabled {
+  background: var(--paper-deep);
+  color: var(--muted);
+  box-shadow: none;
+  border-color: var(--muted);
+}
+
+@media (hover: hover) {
+  .btn:hover:not(:disabled),
+  .icon-btn:hover,
+  .lift:hover:not(:disabled) {
+    transform: translate(-1px, -1px);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .icon-btn:hover {
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+}
+
+.btn-quiet {
+  background: var(--surface);
+  min-height: 52px;
+  font-size: 1.05rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-lime { background: var(--lime); }
+.btn-sky { background: var(--sky); }
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex: none;
+  border: var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.icon-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

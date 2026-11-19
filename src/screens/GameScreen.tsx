@@ -1,10 +1,27 @@
-import { useState, useCallback, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion, useMotionValue, useTransform } from 'framer-motion'
+import { Check, Flag, Flame, RefreshCw, Trophy, X } from 'lucide-react'
+import confetti from 'canvas-confetti'
 import { useApp } from '../context/AppContext'
 import { useTranslation } from '../hooks/useTranslation'
 import { GameCard } from '../components/GameCard'
-import { useVictory } from '../hooks/useVictory'
+import { Hold } from '../components/Hold'
+import { Modal } from '../components/Modal'
+import { MAX_FAIL_PENALTY, REROLL_COST, rankScores } from '../game/logic'
+import { readableOn } from '../utils/color'
+import type { Player } from '../types'
 import './GameScreen.css'
+
+const TURN_OVERLAY_MS = 1300
+const SCORE_POP_MS = 900
+const HOLD_COLORS = ['#FF5E5E', '#FFE066', '#94D4FF', '#FF96E6', '#AEFF96']
+
+const vibrate = (pattern: number | number[]) => navigator.vibrate?.(pattern)
+
+interface ScorePop {
+  id: number
+  value: number
+}
 
 export function GameScreen() {
   const { t } = useTranslation()
@@ -13,228 +30,261 @@ export function GameScreen() {
     currentTurnIndex,
     deck,
     nextTurn,
+    rerollCard,
     settings,
-    endGameInfinite,
+    endGame,
     scores,
+    turnsPlayed,
+    totalTurns,
+    playClick,
+    playSwipe,
   } = useApp()
-  const { triggerConfetti } = useVictory()
-  const [glowDragX, setGlowDragX] = useState(0)
-  const [showEndModal, setShowEndModal] = useState(false)
-  const [showRanking, setShowRanking] = useState(false)
-  const [overlayPlayer, setOverlayPlayer] = useState<typeof currentPlayer | null>(null)
 
   const currentPlayer = turnOrder[currentTurnIndex]
   const currentCard = deck[0]
-  const isInfinite = settings.mode === 'infinite'
-  const currentScore = scores.find((s) => s.player.id === currentPlayer?.id)
-  const streak = currentScore?.streak || 0
+  const isDuelo = settings.mode === 'duelo'
+  const score = scores.find((s) => s.player.id === currentPlayer?.id)
+  const streak = score?.streak ?? 0
+
+  const [overlayPlayer, setOverlayPlayer] = useState<Player | null>(currentPlayer ?? null)
+  const [showEndModal, setShowEndModal] = useState(false)
+  const [showRanking, setShowRanking] = useState(false)
+  const [exitDirection, setExitDirection] = useState(0)
+  const [scorePop, setScorePop] = useState<ScorePop | null>(null)
+  const resolving = useRef(false)
+
+  const dragOffset = useMotionValue(0)
+  const failGlow = useTransform(dragOffset, [-120, -20], [1, 0])
+  const doneGlow = useTransform(dragOffset, [20, 120], [0, 1])
+
+  const playerId = currentPlayer?.id
+  useEffect(() => {
+    const player = turnOrder.find((p) => p.id === playerId)
+    if (!player) return
+    setOverlayPlayer(player)
+    const timer = setTimeout(() => setOverlayPlayer(null), TURN_OVERLAY_MS)
+    return () => clearTimeout(timer)
+  }, [playerId, turnOrder])
 
   useEffect(() => {
-    if (currentPlayer) {
-      setOverlayPlayer(currentPlayer)
-      const timer = setTimeout(() => setOverlayPlayer(null), 1500)
-      return () => clearTimeout(timer)
-    }
-  }, [currentPlayer])
+    resolving.current = false
+  }, [currentCard?.id, turnsPlayed])
 
-  const handleDragChange = useCallback((dx: number) => {
-    setGlowDragX(dx)
-  }, [])
+  useEffect(() => {
+    if (!scorePop) return
+    const timer = setTimeout(() => setScorePop(null), SCORE_POP_MS)
+    return () => clearTimeout(timer)
+  }, [scorePop])
 
-  const handleEndGame = () => {
-    setShowEndModal(false)
-    endGameInfinite()
+  const closeEndModal = useCallback(() => setShowEndModal(false), [])
+  const closeRanking = useCallback(() => setShowRanking(false), [])
+
+  const failCost = Math.min(currentCard?.points ?? 0, MAX_FAIL_PENALTY)
+
+  const resolveCard = useCallback(
+    (completed: boolean) => {
+      if (resolving.current || !currentCard) return
+      resolving.current = true
+      setExitDirection(completed ? 1 : -1)
+      setScorePop({ id: Date.now(), value: completed ? currentCard.points : -failCost })
+      playSwipe()
+      if (completed) {
+        vibrate(50)
+        confetti({
+          particleCount: 70,
+          spread: 80,
+          origin: { y: 0.7 },
+          colors: HOLD_COLORS,
+          disableForReducedMotion: true,
+        })
+      } else {
+        vibrate([80, 40, 80])
+      }
+      nextTurn(completed)
+    },
+    [currentCard, failCost, nextTurn, playSwipe],
+  )
+
+  const handleComplete = useCallback(() => resolveCard(true), [resolveCard])
+  const handleFail = useCallback(() => resolveCard(false), [resolveCard])
+
+  if (!currentPlayer || !currentCard) return null
+
+  const handleReroll = () => {
+    if (resolving.current) return
+    resolving.current = true
+    setExitDirection(0)
+    setScorePop({ id: Date.now(), value: -REROLL_COST })
+    playClick()
+    rerollCard()
   }
 
-  if (!currentPlayer) {
-    return (
-      <div className="game-screen">
-        <p>{t('scoreboard')}</p>
-      </div>
-    )
-  }
-
-  if (!currentCard) {
-    return (
-      <div className="game-screen">
-        <p>No cards in deck.</p>
-      </div>
-    )
-  }
-
-  const handleComplete = () => {
-    triggerConfetti(currentPlayer.color)
-    nextTurn(true, currentCard.points)
-  }
-
-  const handleFail = () => {
-    nextTurn(false, currentCard.points)
-  }
-
-  const showGreenGlow = glowDragX > 20
-  const showRedGlow = glowDragX < -20
+  const accent = isDuelo ? '#FFE066' : currentPlayer.color
+  const playerName = isDuelo ? t('allPlayers') : currentPlayer.nickname
+  const overlayColor = isDuelo ? '#FFE066' : overlayPlayer?.color ?? accent
+  const challengeNumber = turnsPlayed + 1
+  const progress = totalTurns ? Math.min(1, turnsPlayed / totalTurns) : 0
 
   return (
-    <div
-      className="game-screen"
-      style={{
-        ['--player-color' as string]: settings.mode === 'duelo' ? '#4338CA' : currentPlayer.color,
-      }}
-    >
-      {/* Glow panels on sides when swiping */}
-      <div
-        className={`game-glow game-glow-left ${showRedGlow ? 'active' : ''}`}
-        style={{ opacity: showRedGlow ? Math.min(1, Math.abs(glowDragX) / 80) : 0 }}
-        aria-hidden
-      />
-      <div
-        className={`game-glow game-glow-right ${showGreenGlow ? 'active' : ''}`}
-        style={{ opacity: showGreenGlow ? Math.min(1, glowDragX / 80) : 0 }}
-        aria-hidden
-      />
+    <div className="game-screen">
+      <motion.div className="game-glow fail" style={{ opacity: failGlow }} aria-hidden />
+      <motion.div className="game-glow done" style={{ opacity: doneGlow }} aria-hidden />
 
-      <header className="game-header">
-        <div className="game-turn-banner">
-          <div className="game-turn-semicircle" />
-          <span className="game-turn-name">
-            {settings.mode === 'duelo' ? t('allPlayers') : currentPlayer.nickname}
-            {settings.mode !== 'duelo' && streak >= 3 && <span title={`Racha de ${streak}`}> 🔥</span>}
-          </span>
-        </div>
+      <header className="game-hud">
         <button
           type="button"
-          className="game-ranking-btn"
+          className="icon-btn"
+          onClick={() => setShowEndModal(true)}
+          aria-label={t('endGameConfirm')}
+        >
+          <Flag size={20} strokeWidth={2.75} aria-hidden />
+        </button>
+
+        <div className="game-player">
+          <Hold size={40} color={accent} />
+          <div className="game-player-text">
+            <span className="game-player-name">{playerName}</span>
+            <span className="game-player-points">
+              {score?.points ?? 0} {t('pointsShort')}
+              {streak >= 3 && (
+                <span className="game-streak" title={`${t('streak')}: ${streak}`}>
+                  <Flame size={14} strokeWidth={3} aria-hidden />
+                  {streak}
+                </span>
+              )}
+            </span>
+          </div>
+
+          <AnimatePresence>
+            {scorePop && (
+              <motion.span
+                key={scorePop.id}
+                className={`game-score-pop ${scorePop.value > 0 ? 'gain' : 'loss'}`}
+                initial={{ opacity: 0, y: 10, scale: 0.7 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -14 }}
+              >
+                {scorePop.value > 0 ? `+${scorePop.value}` : `−${Math.abs(scorePop.value)}`}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <button
+          type="button"
+          className="icon-btn"
           onClick={() => setShowRanking(true)}
           aria-label={t('liveRankingTitle')}
-          title={t('liveRankingTitle')}
         >
-          <i className="fa-solid fa-trophy" aria-hidden />
+          <Trophy size={20} strokeWidth={2.75} aria-hidden />
         </button>
-        {isInfinite && (
-          <button
-            type="button"
-            className="game-end-btn"
-            onClick={() => setShowEndModal(true)}
-            aria-label={t('endGameConfirm')}
-            title={t('endGameConfirm')}
-          >
-            <i className="fa-solid fa-flag" aria-hidden />
-          </button>
-        )}
       </header>
 
-      <div className="game-card-area">
-        <GameCard
-          card={currentCard}
-          onComplete={handleComplete}
-          onFail={handleFail}
-          onDragChange={handleDragChange}
-        />
+      <div className="game-progress">
+        <span className="game-progress-label">
+          {t('challenge')} {challengeNumber}
+          {totalTurns > 0 && `/${totalTurns}`}
+        </span>
+        {totalTurns > 0 && (
+          <div className="game-progress-track" aria-hidden>
+            <div className="game-progress-bar" style={{ transform: `scaleX(${progress})` }} />
+          </div>
+        )}
+      </div>
+
+      <main className="game-stage">
+        <div className="game-deck-ghost second" aria-hidden />
+        <div className="game-deck-ghost first" aria-hidden />
+        <AnimatePresence custom={exitDirection} initial={false}>
+          <GameCard
+            key={`${currentCard.id}-${turnsPlayed}`}
+            card={currentCard}
+            timerSeconds={settings.timedMode ? settings.timerSeconds : null}
+            paused={!!overlayPlayer || showEndModal || showRanking}
+            dragOffset={dragOffset}
+            onComplete={handleComplete}
+            onFail={handleFail}
+          />
+        </AnimatePresence>
+      </main>
+
+      <div className="game-actions">
+        <button type="button" className="game-action fail" onClick={handleFail} aria-label={t('failChallenge')}>
+          <X size={30} strokeWidth={3.5} aria-hidden />
+          <span>−{failCost}</span>
+        </button>
+        <button type="button" className="game-action reroll" onClick={handleReroll} aria-label={t(settings.mode === 'twister' ? 'reroll' : 'rerollCard')}>
+          <RefreshCw size={22} strokeWidth={3} aria-hidden />
+          <span>−{REROLL_COST}</span>
+        </button>
+        <button type="button" className="game-action done" onClick={handleComplete} aria-label={t('completeChallenge')}>
+          <Check size={30} strokeWidth={3.5} aria-hidden />
+          <span>+{currentCard.points}</span>
+        </button>
       </div>
 
       {showRanking && (
-        <div className="game-end-modal-overlay" onClick={() => setShowRanking(false)} role="dialog" aria-modal="true">
-          <div className="game-ranking-modal" onClick={(e) => e.stopPropagation()}>
-            <p className="game-end-modal-title">{t('liveRankingTitle')}</p>
-            <div className="ranking-list">
-              {[...scores]
-                .sort((a, b) => b.points - a.points)
-                .map((s, idx) => (
-                  <div key={s.player.id} className="ranking-item">
-                    <div className="ranking-item-left">
-                      <span className="ranking-pos">#{idx + 1}</span>
-                      <div 
-                        className="ranking-badge" 
-                        style={{ ['--player-color' as string]: s.player.color }} 
-                      />
-                      <span className="ranking-player-name">{s.player.nickname}</span>
-                    </div>
-                    <span className="ranking-player-points">{s.points} pts</span>
-                  </div>
-                ))}
-            </div>
-            <div className="game-end-modal-actions" style={{ marginTop: '1.5rem' }}>
-              <button type="button" className="game-end-modal-btn primary" onClick={() => setShowRanking(false)}>
-                {t('confirm')}
-              </button>
-            </div>
-          </div>
-        </div>
+        <Modal title={t('liveRankingTitle')} onClose={closeRanking}>
+          <ol className="game-ranking">
+            {rankScores(scores).map((entry, index) => (
+              <li key={entry.player.id} className="game-ranking-item">
+                <span className="game-ranking-position">{index + 1}</span>
+                <Hold size={32} color={entry.player.color} />
+                <span className="game-ranking-name">{entry.player.nickname}</span>
+                <span className="game-ranking-points">{entry.points} {t('pointsShort')}</span>
+              </li>
+            ))}
+          </ol>
+        </Modal>
       )}
 
       {showEndModal && (
-        <div className="game-end-modal-overlay" onClick={() => setShowEndModal(false)} role="dialog" aria-modal="true">
-          <div className="game-end-modal" onClick={(e) => e.stopPropagation()}>
-            <p className="game-end-modal-title">{t('endGameConfirm')}</p>
-            <div className="game-end-modal-actions">
-              <button type="button" className="game-end-modal-btn secondary" onClick={() => setShowEndModal(false)}>
-                {t('cancel')}
-              </button>
-              <button type="button" className="game-end-modal-btn primary" onClick={handleEndGame}>
-                {t('confirm')}
-              </button>
-            </div>
+        <Modal title={t('endGameConfirm')} onClose={closeEndModal}>
+          <p className="game-end-text">{t('endGameHint')}</p>
+          <div className="game-end-actions">
+            <button type="button" className="btn btn-quiet" onClick={closeEndModal}>{t('cancel')}</button>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => {
+                closeEndModal()
+                endGame()
+              }}
+            >
+              {t('confirm')}
+            </button>
           </div>
-        </div>
+        </Modal>
       )}
 
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {overlayPlayer && (
-          <motion.div
+          <motion.button
             key={overlayPlayer.id}
+            type="button"
             className="game-turn-overlay"
+            style={{ backgroundColor: overlayColor, color: readableOn(overlayColor) }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: settings.mode === 'duelo' ? '#4338CA' : overlayPlayer.color,
-              zIndex: 9999,
-            }}
+            transition={{ duration: 0.15 }}
+            onClick={() => setOverlayPlayer(null)}
           >
-            <motion.h1
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 1.5, opacity: 0 }}
-              transition={{ type: 'spring', damping: 15 }}
-              style={{
-                color: 'white',
-                fontSize: '4rem',
-                fontWeight: '900',
-                textShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                textAlign: 'center',
-                margin: 0,
-                padding: '1rem'
-              }}
+            <span className="game-turn-label">{t('yourTurn')}</span>
+            <motion.span
+              className="game-turn-name"
+              initial={{ scale: 0.6, rotate: -4 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: 'spring', damping: 12, stiffness: 240 }}
             >
-              {settings.mode === 'duelo' ? t('allPlayers') : overlayPlayer.nickname}
-            </motion.h1>
-            {settings.mode !== 'duelo' && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ delay: 0.2 }}
-                style={{
-                  position: 'absolute',
-                  bottom: '30%',
-                  color: 'white',
-                  fontSize: '2rem',
-                  fontWeight: '700',
-                  backgroundColor: 'rgba(0,0,0,0.2)',
-                  padding: '0.5rem 1.5rem',
-                  borderRadius: '2rem',
-                  border: '2px solid rgba(255,255,255,0.3)'
-                }}
-              >
-                {scores.find(s => s.player.id === overlayPlayer.id)?.points || 0} {t('points')}
-              </motion.div>
+              {isDuelo ? t('allPlayers') : overlayPlayer.nickname}
+            </motion.span>
+            {!isDuelo && (
+              <span className="game-turn-points">
+                {scores.find((s) => s.player.id === overlayPlayer.id)?.points ?? 0} {t('points')}
+              </span>
             )}
-          </motion.div>
+          </motion.button>
         )}
       </AnimatePresence>
     </div>

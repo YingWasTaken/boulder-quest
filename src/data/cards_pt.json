@@ -1226,7 +1226,7 @@
     "description": "Cada vez que você mover o pé, deixe-o cair com força (faça muito barulho).",
     "level": 1,
     "points": 1,
-    "statType": "technique",
+    "statType": "specialChallenges",
     "tries": 1,
     "imageSrc": null,
     "mode": "All"

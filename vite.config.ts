@@ -7,33 +7,24 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'logo.png', 'icons.svg', 'click.wav', 'swipe.wav'],
+      includeAssets: ['logo.png', 'click.wav', 'swipe.wav'],
       manifest: {
         name: 'Boulder Quest',
         short_name: 'BoulderQuest',
         description: 'A card game for climbing gyms',
-        theme_color: '#4338CA',
+        theme_color: '#FFF8E9',
+        background_color: '#FFF8E9',
+        display: 'standalone',
         icons: [
           {
             src: 'logo.png',
-            sizes: '192x192',
+            sizes: '1080x1080',
             type: 'image/png'
-          },
-          {
-            src: 'logo.png',
-            sizes: '512x512',
-            type: 'image/png'
-          },
-          {
-            src: 'logo.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable'
           }
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,wav}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,wav,woff2}'],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
         skipWaiting: true

@@ -1,27 +1,22 @@
 import { motion } from 'framer-motion'
+import { Hold } from './Hold'
 import './SplashScreen.css'
 
 export function SplashScreen() {
   return (
     <motion.div
       className="splash-screen"
-      initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.4, ease: "easeInOut" }}
+      transition={{ duration: 0.25 }}
     >
       <motion.div
-        className="splash-content"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1.05, opacity: 1 }}
-        exit={{ scale: 1.3, opacity: 0 }}
-        transition={{
-          duration: 1.5,
-          ease: "easeOut"
-        }}
+        initial={{ scale: 0.6, rotate: -12, opacity: 0 }}
+        animate={{ scale: 1, rotate: 0, opacity: 1 }}
+        transition={{ type: 'spring', damping: 11, stiffness: 180 }}
       >
-        <img src="/logo.png" alt="Boulder Quest Logo" className="splash-logo" />
-        <h2 className="splash-title">Boulder Quest</h2>
+        <Hold size={148} />
       </motion.div>
+      <h1 className="splash-title" translate="no">Boulder Quest</h1>
     </motion.div>
   )
 }

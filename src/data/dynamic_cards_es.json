@@ -24,7 +24,7 @@
   {
     "id": 1003,
     "title": "RETO DE EQUILIBRIO",
-    "description": "Escala un bloque de grado {nivel_usuario} sin utilizar el {parte_cuerpo}.",
+    "description": "Escala un bloque de grado {nivel_usuario} sin utilizar {parte_cuerpo}.",
     "level": 2,
     "points": 3,
     "statType": "balance",
@@ -35,7 +35,7 @@
   {
     "id": 1004,
     "title": "RETO DE VELOCIDAD",
-    "description": "Completa un bloque de presas {color_presa} en menos de {segundos} segundos.",
+    "description": "Completa un bloque de presas {color_presa} en menos de {segundos_bloque} segundos.",
     "level": 2,
     "points": 3,
     "statType": "speed",

@@ -1,0 +1,59 @@
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px;
+  border: var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.stepper-btn {
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.12s ease;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: var(--line);
+  border-radius: 9px;
+  background: var(--sun);
+}
+
+@media (hover: hover) {
+  .stepper-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+}
+
+.stepper-btn:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+.stepper-btn:disabled {
+  background: var(--paper-deep);
+  border-color: var(--muted);
+  color: var(--muted);
+}
+
+.stepper-value {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.stepper-value strong {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.stepper-value small {
+  color: var(--muted);
+  font-size: 0.9rem;
+}

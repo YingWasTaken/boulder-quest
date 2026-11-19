@@ -1,74 +1,60 @@
 .add-player-form {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
 }
 
 .add-player-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.add-player-colors {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.add-player-color-btn {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  border: 3px solid transparent;
-  cursor: pointer;
-  padding: 0;
-  transition: transform 0.15s, border-color 0.15s;
-}
-
-.add-player-color-btn.selected {
-  border-color: var(--text);
-  transform: scale(1.15);
-}
-
-.add-player-color-btn.used {
-  opacity: 0.4;
-  cursor: not-allowed;
-  position: relative;
-}
-
-.add-player-color-btn.used::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: repeating-linear-gradient(
-    -45deg,
-    transparent,
-    transparent 2px,
-    rgba(0,0,0,0.3) 2px,
-    rgba(0,0,0,0.3) 4px
-  );
+  margin: 10px 0 6px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
 }
 
 .add-player-input {
   width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  border: 2px solid rgba(0,0,0,0.12);
-  border-radius: 0.5rem;
-  background: var(--bg);
-  color: var(--text);
-  box-sizing: border-box;
+  min-height: 56px;
+  padding: 10px 14px;
+  border: var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 1.15rem;
+  font-weight: 600;
 }
 
 .add-player-input:focus {
+  box-shadow: var(--shadow-sm);
+}
+
+.add-player-input:focus:not(:focus-visible) {
   outline: none;
-  border-color: var(--primary);
 }
 
 .add-player-error {
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--error);
+  margin: 8px 0 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #B3261E;
+}
+
+.add-player-colors {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.add-player-color {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1.45;
+  border: var(--line);
+  border-radius: 10px;
+}
+
+.add-player-color.selected {
+  box-shadow: var(--shadow-sm);
+}
+
+.add-player-color:disabled {
+  opacity: 0.25;
+  border-style: dashed;
 }
