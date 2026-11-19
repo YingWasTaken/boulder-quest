@@ -10,13 +10,14 @@ import { Modal } from '../components/Modal'
 import { MAX_FAIL_PENALTY, REROLL_COST, rankScores } from '../game/logic'
 import { readableOn } from '../utils/color'
 import type { Player } from '../types'
+import { haptic } from '../native/platform'
+import { useBackHandler } from '../native/back'
 import './GameScreen.css'
 
 const TURN_OVERLAY_MS = 1300
 const SCORE_POP_MS = 900
 const HOLD_COLORS = ['#FF5E5E', '#FFE066', '#94D4FF', '#FF96E6', '#AEFF96']
 
-const vibrate = (pattern: number | number[]) => navigator.vibrate?.(pattern)
 
 interface ScorePop {
   id: number
@@ -78,6 +79,7 @@ export function GameScreen() {
 
   const closeEndModal = useCallback(() => setShowEndModal(false), [])
   const closeRanking = useCallback(() => setShowRanking(false), [])
+  useBackHandler(() => setShowEndModal(true))
 
   const failCost = Math.min(currentCard?.points ?? 0, MAX_FAIL_PENALTY)
 
@@ -89,7 +91,7 @@ export function GameScreen() {
       setScorePop({ id: Date.now(), value: completed ? currentCard.points : -failCost })
       playSwipe()
       if (completed) {
-        vibrate(50)
+        haptic('success')
         confetti({
           particleCount: 70,
           spread: 80,
@@ -98,7 +100,7 @@ export function GameScreen() {
           disableForReducedMotion: true,
         })
       } else {
-        vibrate([80, 40, 80])
+        haptic('fail')
       }
       nextTurn(completed)
     },

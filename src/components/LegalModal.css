@@ -1,0 +1,8 @@
+.legal-frame {
+  display: block;
+  width: 100%;
+  height: 62dvh;
+  border: var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}

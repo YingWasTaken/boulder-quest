@@ -57,7 +57,7 @@
   "howToPlaySlide2Title": "Cartas e pontos",
   "howToPlaySlide2Body": "Cada carta tem pontos, dificuldade e tentativas. Completar adiciona pontos; falhar penaliza. Quem tiver mais pontos no final das rondas ganha.",
   "howToPlaySlide3Title": "Vamos jogar!",
-  "howToPlaySlide3Body": "Escolhe quem joga e um modo: Infinito, Todos contra todos, Duelo, Twister ou Contrarrelógio. Filtra categorias e dificuldade em Personalizar, e a escalar!",
+  "howToPlaySlide3Body": "Escolhe quem joga e um modo: Infinito, Todos contra todos, Duelo, Roleta de cores ou Contrarrelógio. Filtra categorias e dificuldade em Personalizar, e a escalar!",
   "modeInfiniteDesc": "Sem limite de rondas. Jogue até querer parar.",
   "modeAllVsAllDesc": "Cada jogador acumula pontos. Ganha quem tiver mais no final.",
   "modeTeamsDesc": "Forme equipas e some os pontos da equipa.",
@@ -93,7 +93,7 @@
   "remove": "Remover",
   "timerPerCard": "Tempo por desafio",
   "needsTwoPlayers": "Precisa de pelo menos 2 jogadores",
-  "modeTwister": "TWISTER",
+  "modeTwister": "ROLETA DE CORES",
   "modeSpeedrun": "CONTRARRELÓGIO",
   "modeTwisterDesc": "Completa uma via ou bloco da cor que te calhar.",
   "modeSpeedrunDesc": "Depressa! Tens tempo limitado para cada desafio. Se o cronómetro chegar a zero, falhas automaticamente.",
@@ -119,5 +119,11 @@
   "completedChallenges": "desafios concluídos",
   "undo": "Desfazer",
   "playerRemoved": "{name} removido",
-  "noPlayersYet": "Adiciona cada pessoa que vai escalar."
+  "noPlayersYet": "Adiciona cada pessoa que vai escalar.",
+  "language": "Idioma",
+  "legal": "Legal",
+  "privacyPolicy": "Política de privacidade",
+  "safetyTerms": "Segurança e condições",
+  "licenses": "Licenças de terceiros",
+  "safetyNotice": "Escala com cabeça: respeita as regras do ginásio e os teus limites, e pede autorização antes de envolver outras pessoas. Cada jogador participa por sua conta e risco."
 }

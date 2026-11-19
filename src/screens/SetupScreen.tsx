@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
-import { ArrowRight, BookOpen, Plus, Settings, Volume2, VolumeX, X } from 'lucide-react'
+import { ArrowRight, Plus, Settings, X } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { useTranslation } from '../hooks/useTranslation'
 import { AddPlayerModal } from '../components/AddPlayerModal'
 import { Hold } from '../components/Hold'
-import { Modal } from '../components/Modal'
-import { LanguageDropdown } from '../components/LanguageDropdown'
+import { SettingsModal } from '../components/SettingsModal'
 import { PLAYER_COLORS, type Player } from '../types'
 import './SetupScreen.css'
 
@@ -13,7 +12,7 @@ const UNDO_MS = 5000
 
 export function SetupScreen() {
   const { t } = useTranslation()
-  const { setScreen, players, removePlayer, restorePlayer, playClick, soundOn, toggleSound } = useApp()
+  const { setScreen, players, removePlayer, restorePlayer, playClick } = useApp()
   const [showAddModal, setShowAddModal] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [removed, setRemoved] = useState<{ player: Player; index: number } | null>(null)
@@ -29,7 +28,6 @@ export function SetupScreen() {
   return (
     <div className="page setup-screen">
       <header className="setup-header">
-        <LanguageDropdown />
         <Hold size={46} className="setup-logo" />
         <button
           type="button"
@@ -120,35 +118,7 @@ export function SetupScreen() {
         </button>
       </div>
 
-      {showSettings && (
-        <Modal title={t('settings')} onClose={() => setShowSettings(false)}>
-          <div className="setup-settings">
-            <button type="button" className="btn btn-quiet" onClick={toggleSound} aria-pressed={soundOn}>
-              {soundOn ? <Volume2 size={22} aria-hidden /> : <VolumeX size={22} aria-hidden />}
-              {t('sound')}: {soundOn ? t('on') : t('off')}
-            </button>
-            <button
-              type="button"
-              className="btn btn-quiet"
-              onClick={() => {
-                playClick()
-                setScreen('howToPlay')
-              }}
-            >
-              <BookOpen size={22} aria-hidden />
-              {t('howToPlay')}
-            </button>
-            <a
-              href="https://discord.gg/WwGSacHA8d"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-quiet btn-sky"
-            >
-              {t('discordMock')}
-            </a>
-          </div>
-        </Modal>
-      )}
+      {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
 
       {showAddModal && <AddPlayerModal onClose={() => setShowAddModal(false)} />}
     </div>

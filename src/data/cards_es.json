@@ -4314,7 +4314,7 @@
   {
     "id": 393,
     "title": "El Top Model II",
-    "description": "Tienes que posar 5 segundos en la posición más instagrameable del bloque. Que alguien te haga foto.",
+    "description": "Posa 5 segundos en la posición más fotogénica del bloque. Pide a un compañero que te haga una foto.",
     "level": 1,
     "points": 2,
     "statType": "specialChallenges",
@@ -4391,7 +4391,7 @@
   {
     "id": 400,
     "title": "Comparte",
-    "description": "Ve a cualquier random del rocódromo y recomiéndale este juego. Si no se instala / busca el juego, no cuenta.",
+    "description": "Cuéntale a alguien del rocódromo de qué va este juego e invítale a una partida.",
     "level": 1,
     "points": 100,
     "statType": "specialChallenges",
@@ -4555,8 +4555,8 @@
   },
   {
     "id": 415,
-    "title": "Goku SSJ",
-    "description": "Grita mientras te transformas en Super Saiyan antes del movimiento más duro. Se valora el temblor.",
+    "title": "Superguerrero",
+    "description": "Grita como si te transformaras en un guerrero legendario antes del movimiento más duro. Se valora el temblor.",
     "level": 1,
     "points": 2,
     "statType": "specialChallenges",

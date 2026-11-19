@@ -8,6 +8,9 @@ import { SetupScreen } from './screens/SetupScreen'
 import { ModesScreen } from './screens/ModesScreen'
 import { GameScreen } from './screens/GameScreen'
 import { ScoreboardScreen } from './screens/ScoreboardScreen'
+import { initNative } from './native/platform'
+
+initNative()
 
 function CurrentScreen() {
   const { screen, setScreen } = useApp()

@@ -4314,7 +4314,7 @@
   {
     "id": 393,
     "title": "Le Top Model II",
-    "description": "Vous devez poser pendant 5 secondes dans la position la plus instagrammable du quartier. Quelqu'un prend une photo de vous.",
+    "description": "Prends la pose 5 secondes dans la position la plus photogénique du bloc. Demande à un ami de te prendre en photo.",
     "level": 1,
     "points": 2,
     "statType": "specialChallenges",
@@ -4390,8 +4390,8 @@
   },
   {
     "id": 400,
-    "title": "Partager",
-    "description": "Allez voir n’importe quelle personne au hasard dans la salle d’escalade et recommandez ce jeu. Si le jeu n’est pas installé/recherché, cela ne compte pas.",
+    "title": "Partage",
+    "description": "Explique à quelqu'un de la salle en quoi consiste ce jeu et invite-le à une partie.",
     "level": 1,
     "points": 100,
     "statType": "specialChallenges",
@@ -4555,8 +4555,8 @@
   },
   {
     "id": 415,
-    "title": "Goku SSJ",
-    "description": "Criez pendant que vous vous transformez en Super Saiyan avant le mouvement le plus difficile. Le tremblement est évalué.",
+    "title": "Super guerrier",
+    "description": "Crie comme si tu te transformais en guerrier légendaire avant le mouvement le plus dur. Les tremblements comptent.",
     "level": 1,
     "points": 2,
     "statType": "specialChallenges",

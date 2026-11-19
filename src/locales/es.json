@@ -19,7 +19,7 @@
   "modeTeams": "POR EQUIPOS",
   "modeAllToOne": "TODOS A UNA",
   "modeDuelo": "DUELO",
-  "modeTwister": "TWISTER",
+  "modeTwister": "RULETA DE COLORES",
   "modeSpeedrun": "CONTRARRELOJ",
   "playMode": "Jugar",
   "backToSetup": "Volver a jugadores",
@@ -59,7 +59,7 @@
   "howToPlaySlide2Title": "Cartas y puntos",
   "howToPlaySlide2Body": "Cada carta tiene puntos, dificultad e intentos. Al completar sumas puntos; al fallar, se penaliza. Gana quien más puntos tenga al final de las rondas.",
   "howToPlaySlide3Title": "¡A jugar!",
-  "howToPlaySlide3Body": "Elige quién juega y un modo: Infinito, Todos contra todos, Duelo, Twister o Contrarreloj. Filtra categorías y dificultad en Personalizar, ¡y a escalar!",
+  "howToPlaySlide3Body": "Elige quién juega y un modo: Infinito, Todos contra todos, Duelo, Ruleta de colores o Contrarreloj. Filtra categorías y dificultad en Personalizar, ¡y a escalar!",
   "modeInfiniteDesc": "Sin límite de rondas. Juega hasta que quieras parar.",
   "modeAllVsAllDesc": "Cada jugador acumula puntos. Gana quien tenga más al final.",
   "modeTeamsDesc": "Forma equipos y suma los puntos del equipo.",
@@ -119,5 +119,11 @@
   "needsTwoPlayers": "Necesita al menos 2 jugadores",
   "undo": "Deshacer",
   "playerRemoved": "{name} eliminado",
-  "noPlayersYet": "Añade a cada persona que vaya a escalar."
+  "noPlayersYet": "Añade a cada persona que vaya a escalar.",
+  "language": "Idioma",
+  "legal": "Legal",
+  "privacyPolicy": "Política de privacidad",
+  "safetyTerms": "Seguridad y condiciones",
+  "licenses": "Licencias de terceros",
+  "safetyNotice": "Escala con cabeza: respeta las normas del rocódromo y tus límites, y pide permiso antes de implicar a otras personas. Cada jugador participa bajo su responsabilidad."
 }

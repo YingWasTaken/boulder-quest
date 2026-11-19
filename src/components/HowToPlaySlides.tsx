@@ -3,6 +3,7 @@ import { ArrowRight, Check, Layers, X } from 'lucide-react'
 import { useTranslation } from '../hooks/useTranslation'
 import { useApp } from '../context/AppContext'
 import { Hold } from './Hold'
+import { useBackHandler } from '../native/back'
 import './HowToPlaySlides.css'
 
 const SLIDES = [
@@ -24,6 +25,8 @@ export function HowToPlaySlides({ onClose }: HowToPlaySlidesProps) {
   const touchStart = useRef<number | null>(null)
 
   const isLast = index === SLIDES.length - 1
+
+  useBackHandler(() => (index > 0 ? setIndex(index - 1) : onClose()))
 
   const goTo = (next: number) => {
     if (next < 0 || next >= SLIDES.length) return
@@ -71,6 +74,7 @@ export function HowToPlaySlides({ onClose }: HowToPlaySlidesProps) {
               </Hold>
               <h2 className="how-to-play-title">{t(`${key}Title`)}</h2>
               <p className="how-to-play-body">{t(`${key}Body`)}</p>
+              {i === SLIDES.length - 1 && <p className="how-to-play-safety">{t('safetyNotice')}</p>}
             </div>
           ))}
         </div>

@@ -19,7 +19,7 @@
   "modeTeams": "TEAMS",
   "modeAllToOne": "ALL TO ONE",
   "modeDuelo": "DUEL",
-  "modeTwister": "TWISTER",
+  "modeTwister": "COLOR ROULETTE",
   "modeSpeedrun": "SPEEDRUN",
   "playMode": "Play",
   "backToSetup": "Back to players",
@@ -59,7 +59,7 @@
   "howToPlaySlide2Title": "Cards and points",
   "howToPlaySlide2Body": "Each card has points, difficulty and tries. Completing adds points; failing penalizes. The player with the most points at the end of the rounds wins.",
   "howToPlaySlide3Title": "Let's play!",
-  "howToPlaySlide3Body": "Choose who plays and a mode: Infinite, All vs All, Duel, Twister or Speedrun. Filter categories and difficulty in Customize, and start climbing!",
+  "howToPlaySlide3Body": "Choose who plays and a mode: Infinite, All vs All, Duel, Color Roulette or Speedrun. Filter categories and difficulty in Customize, and start climbing!",
   "modeInfiniteDesc": "No round limit. Play until you want to stop.",
   "modeAllVsAllDesc": "Each player accumulates points. Whoever has the most at the end wins.",
   "modeTeamsDesc": "Form teams and add up the team's points.",
@@ -119,5 +119,11 @@
   "needsTwoPlayers": "Needs at least 2 players",
   "undo": "Undo",
   "playerRemoved": "{name} removed",
-  "noPlayersYet": "Add everyone who is going to climb."
+  "noPlayersYet": "Add everyone who is going to climb.",
+  "language": "Language",
+  "legal": "Legal",
+  "privacyPolicy": "Privacy policy",
+  "safetyTerms": "Safety and terms",
+  "licenses": "Third-party licences",
+  "safetyNotice": "Climb smart: follow the gym rules and your limits, and ask before involving other people. Each player takes part at their own risk."
 }

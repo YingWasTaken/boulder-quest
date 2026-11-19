@@ -2,6 +2,7 @@ import { useState } from 'react'
 import {
   ArrowLeft,
   ChevronRight,
+  Settings,
   Infinity as InfinityIcon,
   Palette,
   Swords,
@@ -12,7 +13,8 @@ import {
 import { useApp, getCardsPool } from '../context/AppContext'
 import { useTranslation } from '../hooks/useTranslation'
 import { CATEGORY_COLORS, CATEGORY_ICONS } from '../constants/categories'
-import { LanguageDropdown } from '../components/LanguageDropdown'
+import { SettingsModal } from '../components/SettingsModal'
+import { useBackHandler } from '../native/back'
 import { Modal } from '../components/Modal'
 import { Stepper } from '../components/Stepper'
 import { filterCards } from '../game/logic'
@@ -48,6 +50,9 @@ export function ModesScreen() {
   const { setScreen, setSettings, settings, startGame, players, playClick, lang } = useApp()
   const [tab, setTab] = useState<'modes' | 'personalize'>('modes')
   const [selected, setSelected] = useState<GameMode | null>(null)
+  const [showSettings, setShowSettings] = useState(false)
+
+  useBackHandler(() => setScreen('setup'))
 
   const isSolo = players.length === 1
   const visibleModes = MODES.filter((mode) => !(isSolo && mode.key === 'duelo'))
@@ -105,7 +110,17 @@ export function ModesScreen() {
         >
           <ArrowLeft size={22} strokeWidth={3} aria-hidden />
         </button>
-        <LanguageDropdown />
+        <button
+          type="button"
+          className="icon-btn"
+          onClick={() => {
+            playClick()
+            setShowSettings(true)
+          }}
+          aria-label={t('settings')}
+        >
+          <Settings size={22} strokeWidth={2.75} aria-hidden />
+        </button>
       </header>
 
       <div className="modes-tabs" role="tablist">
@@ -212,6 +227,8 @@ export function ModesScreen() {
           </section>
         </div>
       )}
+
+      {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
 
       {selectedMode && (
         <Modal

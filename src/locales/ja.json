@@ -57,7 +57,7 @@
   "howToPlaySlide2Title": "カードとポイント",
   "howToPlaySlide2Body": "各カードにはポイント、難易度、トライ数があります。完了するとポイントが加算され、失敗するとペナルティがあります。ラウンド終了時に最もポイントが多いプレイヤーの勝ちです。",
   "howToPlaySlide3Title": "遊ぼう！",
-  "howToPlaySlide3Body": "プレイヤーとモードを選びましょう：インフィニット、全員対戦、デュエル、ツイスター、タイムアタック。カスタマイズでカテゴリーと難易度を絞り込めます。さあ登ろう！",
+  "howToPlaySlide3Body": "プレイヤーとモードを選びましょう：インフィニット、全員対戦、デュエル、カラールーレット、タイムアタック。カスタマイズでカテゴリーと難易度を絞り込めます。さあ登ろう！",
   "modeInfiniteDesc": "ラウンド制限なし。やめたい時までプレイ。",
   "modeAllVsAllDesc": "各プレイヤーがポイントを蓄積します。最後に最もポイントが多い人が勝ちます。",
   "modeTeamsDesc": "チームを組み、チームのポイントを合計します。",
@@ -93,7 +93,7 @@
   "remove": "削除",
   "timerPerCard": "チャレンジごとの時間",
   "needsTwoPlayers": "2人以上必要です",
-  "modeTwister": "ツイスター",
+  "modeTwister": "カラールーレット",
   "modeSpeedrun": "タイムアタック",
   "modeTwisterDesc": "指定された色のルートかボルダーを完登しよう。",
   "modeSpeedrunDesc": "急げ！各チャレンジには制限時間があります。タイマーがゼロになると失敗です。",
@@ -119,5 +119,11 @@
   "completedChallenges": "達成したチャレンジ",
   "undo": "元に戻す",
   "playerRemoved": "{name}を削除しました",
-  "noPlayersYet": "登る人を全員追加しましょう。"
+  "noPlayersYet": "登る人を全員追加しましょう。",
+  "language": "言語",
+  "legal": "法的情報",
+  "privacyPolicy": "プライバシーポリシー",
+  "safetyTerms": "安全と利用規約",
+  "licenses": "サードパーティのライセンス",
+  "safetyNotice": "ジムのルールと自分の限界を守り、他の人を巻き込む前に必ず許可を取りましょう。参加は各自の責任で行ってください。"
 }

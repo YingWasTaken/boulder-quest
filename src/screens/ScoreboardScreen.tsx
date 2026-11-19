@@ -6,28 +6,17 @@ import { useApp } from '../context/AppContext'
 import { useTranslation } from '../hooks/useTranslation'
 import { Hold } from '../components/Hold'
 import { getPositions, getWinners, rankScores } from '../game/logic'
+import { shareImage } from '../native/platform'
+import { useBackHandler } from '../native/back'
 import './ScoreboardScreen.css'
 
 const IMAGE_NAME = 'boulder-quest-results.png'
-
-async function shareImage(blob: Blob) {
-  const file = new File([blob], IMAGE_NAME, { type: 'image/png' })
-  if (navigator.canShare?.({ files: [file] })) {
-    await navigator.share({ files: [file], title: 'Boulder Quest' })
-    return
-  }
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.download = IMAGE_NAME
-  link.href = url
-  link.click()
-  URL.revokeObjectURL(url)
-}
 
 export function ScoreboardScreen() {
   const { t } = useTranslation()
   const { scores, playAgain, resetToModes, playClick, players } = useApp()
   const scoreboardRef = useRef<HTMLDivElement>(null)
+  useBackHandler(resetToModes)
 
   const ranked = rankScores(scores)
   const positions = getPositions(ranked)
@@ -55,7 +44,7 @@ export function ScoreboardScreen() {
         backgroundColor: '#FFF8E9',
         pixelRatio: 2,
       })
-      if (blob) await shareImage(blob)
+      if (blob) await shareImage(blob, IMAGE_NAME, 'Boulder Quest')
     } catch (err) {
       // Closing the system share sheet also lands here.
       if (!(err instanceof DOMException && err.name === 'AbortError')) {

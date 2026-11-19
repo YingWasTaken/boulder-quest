@@ -1,6 +1,7 @@
 import { useEffect, useId, type ReactNode } from 'react'
 import { X } from 'lucide-react'
 import { useTranslation } from '../hooks/useTranslation'
+import { useBackHandler } from '../native/back'
 import './Modal.css'
 
 interface ModalProps {
@@ -14,6 +15,7 @@ interface ModalProps {
 export function Modal({ title, children, primaryButtonLabel, onPrimary, onClose }: ModalProps) {
   const { t } = useTranslation()
   const titleId = useId()
+  useBackHandler(onClose)
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {

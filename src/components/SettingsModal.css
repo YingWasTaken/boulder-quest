@@ -1,0 +1,89 @@
+.settings-section + .settings-section {
+  margin-top: 20px;
+}
+
+.settings-heading {
+  margin-bottom: 10px;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.settings-languages {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.settings-language {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 50px;
+  padding: 6px 12px;
+  border: var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-weight: 700;
+  text-align: left;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.settings-language.active {
+  background: var(--sun);
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-language-code {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+@media (hover: hover) {
+  .settings-language:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.settings-legal {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-legal-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 4px 2px;
+  border: 0;
+  border-bottom: 2px dashed var(--paper-deep);
+  background: none;
+  font-weight: 700;
+  text-align: left;
+}
+
+@media (hover: hover) {
+  .settings-legal-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.settings-version {
+  margin: 14px 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+}

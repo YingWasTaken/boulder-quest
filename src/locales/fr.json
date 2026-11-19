@@ -57,7 +57,7 @@
   "howToPlaySlide2Title": "Cartes et points",
   "howToPlaySlide2Body": "Chaque carte a des points, une difficulté et des essais. Compléter ajoute des points ; échouer pénalise. Le joueur avec le plus de points à la fin des manches gagne.",
   "howToPlaySlide3Title": "C'est parti !",
-  "howToPlaySlide3Body": "Choisis qui joue et un mode : Infini, Tous contre tous, Duel, Twister ou Contre-la-montre. Filtre les catégories et la difficulté dans Personnaliser, et grimpe !",
+  "howToPlaySlide3Body": "Choisis qui joue et un mode : Infini, Tous contre tous, Duel, Roulette des couleurs ou Contre-la-montre. Filtre les catégories et la difficulté dans Personnaliser, et grimpe !",
   "modeInfiniteDesc": "Pas de limite de manches. Jouez jusqu'à ce que vous vouliez arrêter.",
   "modeAllVsAllDesc": "Chaque joueur accumule des points. Celui qui en a le plus à la fin gagne.",
   "modeTeamsDesc": "Formez des équipes et additionnez les points de l'équipe.",
@@ -93,7 +93,7 @@
   "remove": "Supprimer",
   "timerPerCard": "Temps par défi",
   "needsTwoPlayers": "Il faut au moins 2 joueurs",
-  "modeTwister": "TWISTER",
+  "modeTwister": "ROULETTE DES COULEURS",
   "modeSpeedrun": "CONTRE-LA-MONTRE",
   "modeTwisterDesc": "Termine une voie ou un bloc de la couleur qui te revient.",
   "modeSpeedrunDesc": "Vite ! Tu as un temps limité pour chaque défi. Si le chrono arrive à zéro, le défi est raté.",
@@ -119,5 +119,11 @@
   "completedChallenges": "défis réussis",
   "undo": "Annuler",
   "playerRemoved": "{name} supprimé",
-  "noPlayersYet": "Ajoute chaque personne qui va grimper."
+  "noPlayersYet": "Ajoute chaque personne qui va grimper.",
+  "language": "Langue",
+  "legal": "Mentions légales",
+  "privacyPolicy": "Politique de confidentialité",
+  "safetyTerms": "Sécurité et conditions",
+  "licenses": "Licences tierces",
+  "safetyNotice": "Grimpe avec prudence : respecte le règlement de la salle et tes limites, et demande avant d'impliquer d'autres personnes. Chaque joueur participe sous sa responsabilité."
 }

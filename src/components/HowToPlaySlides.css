@@ -66,6 +66,17 @@
   letter-spacing: -0.025em;
 }
 
+.how-to-play-safety {
+  margin: 0;
+  padding: 10px 12px;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-sm);
+  background: var(--sun);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 .how-to-play-body {
   margin: 0;
   font-size: 1.15rem;

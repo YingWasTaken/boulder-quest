@@ -109,7 +109,7 @@ export function buildDeck(pool: Card[], settings: GameSettings, playerCount: num
 function twisterCard(color: TwisterColor): Card {
   return {
     id: Date.now() + Math.floor(Math.random() * 1000),
-    title: 'Twister',
+    title: 'Color roulette',
     description: color, // Holds the colour key, translated when shown.
     level: 1,
     points: 2,
